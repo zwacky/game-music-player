@@ -1,0 +1,30 @@
+<ion-header>
+	<ion-navbar>
+		<ion-title>Game Music Player</ion-title>
+
+		<navbar-music-control></navbar-music-control>
+
+	</ion-navbar>
+	<ion-toolbar>
+		<ion-segment [(ngModel)]="segment">
+			<ion-segment-button value="">
+				All Music
+			</ion-segment-button>
+			<ion-segment-button value="faves">
+				Favourites (0)
+			</ion-segment-button>
+		</ion-segment>
+	</ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+	<game-music-list
+		[hidden]="segment !== ''">
+	</game-music-list>
+
+	<div [hidden]="segment !== 'faves'">
+
+	</div>
+
+</ion-content>

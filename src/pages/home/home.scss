@@ -1,0 +1,35 @@
+// @import 'variables.scss';
+
+
+ion-app {
+	// font-family: Quicksand !important;
+}
+
+page-home {
+
+	.scroll-content {
+		margin-bottom: 56px;
+	}
+
+	.toolbar {
+		padding: 0 !important;
+
+		.toolbar-title {
+			text-align: center;
+			color: white;
+			font-weight: 100;
+			font-size: 22px;
+		}
+	}
+
+	ion-toolbar {
+		.toolbar-content {
+			margin-bottom: -14px;
+
+			.segment-button {
+				font-weight: bold;
+			}
+		}
+	}
+
+}

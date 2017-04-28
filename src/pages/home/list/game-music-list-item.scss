@@ -1,0 +1,50 @@
+$border-color: #dedede;
+
+.game-music-list-item {
+	border-bottom: 1px solid $border-color;
+
+	&--selected {
+		background-color: #f6f6f6 !important;
+	}
+
+	&__container {
+		display: flex;
+
+		&__symbol {
+			width: 30px;
+			opacity: 0;
+			transition: opacity 0.25s ease-in-out;
+
+			.game-music-list-item--selected & {
+				opacity: 1;
+			}
+		}
+
+		&__bold {
+			display: inline-block;
+			flex-basis: 30%;
+			padding-right: 10px;
+
+			font-weight: bold;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+		}
+
+		&__casual {
+			display: inline-block;
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space: nowrap;
+			flex-basis: 70%;
+			font-size: 15px;
+			position: relative;
+			top: 1px;
+		}
+	}
+
+	.item-inner {
+		border-bottom: 0 !important;
+	}
+
+}
