@@ -22,17 +22,12 @@ node_modules/
 tmp/
 temp/
 hooks/
+platforms/
 plugins/
 plugins/android.json
 plugins/ios.json
 www/
 $RECYCLE.BIN/
-
-!platforms/
-platforms/*
-!platforms/browser/
-platforms/browser/*
-!platforms/browser/www/
 
 .DS_Store
 Thumbs.db
