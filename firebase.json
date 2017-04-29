@@ -1,0 +1,11 @@
+{
+  "hosting": {
+    "public": "./platforms/browser/www/",
+    "rewrites": [
+      {
+        "source": "**",
+        "destination": "/index.html"
+      }
+    ]
+  }
+}
