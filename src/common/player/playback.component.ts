@@ -29,19 +29,14 @@ import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.pro
 					(change)="onRangeChanged($event)"
 					(input)="onRangeStarted()">
 
-				<div class="playback__spinner">
-					<ion-spinner name="crescent"></ion-spinner>
-				</div>
-
 				<ion-fab top right edge class="playback--fab" (click)="toggleFave()">
-
 					<button ion-fab>
 						<ion-icon [name]="(currentTrack$ | async)?.isFaved ? 'heart' : 'heart-outline'"></ion-icon>
 					</button>
 				</ion-fab>
 
 				<ion-toolbar>
-					<p class="playback__control">
+					<div class="playback__control">
 						<ion-buttons class="playback__control__buttons">
 							<button ion-button icon-only start (click)="togglePlay()">
 								<ion-icon [name]="(isPlaying$ | async) ? 'pause' : 'play'"></ion-icon>
@@ -50,12 +45,12 @@ import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.pro
 								<ion-icon name="skip-forward"></ion-icon>
 							</button>
 						</ion-buttons>
-					</p>
+					</div>
 
-					<p class="playback__display" (click)="scrollToTrack()" *ngIf="(currentTrack$ | async)">
+					<div class="playback__display" (click)="scrollToTrack()" *ngIf="(currentTrack$ | async)">
 						<strong>{{ (currentTrack$ | async)?.creator }}</strong>
 						&nbsp;&nbsp;{{ (currentTrack$ | async)?.title }}
-					</p>
+					</div>
 				</ion-toolbar>
 			</div>
 		</ion-footer>
