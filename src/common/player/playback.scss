@@ -1,11 +1,13 @@
 $opacity-loading: 0.3;
 $width-control: 100px;
+$width-timing: 105px;
 
 .playback {
 	position: relative;
 	background-color: $color-grey;
 	transition: transform 0.3s ease-in-out;
 	transform: translateY(50px);
+	padding-top: 5px;
 
 	[ion-fab] {
 		background-color: $color-primary;
@@ -34,17 +36,16 @@ $width-control: 100px;
 	}
 
 	&--fab {
-		margin-right: 15px;
+		margin-left: 15px;
 	}
 
 	&__control {
-		width: $width-control;
-		padding-left: 10px;
 		display: inline-block;
 		margin-top: 0;
 		margin-bottom: 0;
-		position: relative;
-		top: -5px;
+		position: absolute;
+		top: 12px;
+		left: $width-timing + 15px;
 
 		&__buttons {
 			.playback--loading & {
@@ -58,21 +59,34 @@ $width-control: 100px;
 	}
 
 	&__display {
-		display: inline-block;
-		padding-left: 10px;
+		position: absolute;
+		left: $width-control + $width-timing + 5px;
+		top: 7px;
 		opacity: 1;
 		transition: opacity 0.1s ease-in-out;
 		white-space: nowrap;
 		text-overflow: ellipsis;
 		overflow: hidden;
-		width: calc(100% - $width-control);
 
 		&:hover {
 			cursor: pointer;
 		}
 
-		strong {
-			font-size: 16px;
+		// strong {
+		// 	font-size: 16px;
+		// }
+
+		&--creator {
+			// font-weight: 100;
+			// font-size: 18px;
+			// color: #555;
+			// text-transform: uppercase;
+			font-weight: bold;
+			font-size: 18px;
+		}
+
+		&--title {
+			margin-top: 3px;
 		}
 
 		.playback--loading & {
@@ -80,20 +94,32 @@ $width-control: 100px;
 		}
 	}
 
-	&__seeker {
-		width: 100%;
-		// position: absolute;
-		z-index: 10;
-		top: -5px;
-		// background-color: $color-grey-light;
+	&__timing {
+		width: $width-timing; // so it can be centered in the middle of the fab heart
+		position: absolute;
+		top: 32px;
+		left: 0;
+		text-align: center;
 
-		// &__position {
-		// 	height: 100%;
-		// 	width: 100%;
-		// 	transform: translateX(-100%);
-		// 	background-color: $color-primary-light;
-		// 	transition: transform 0.1s linear;
-		// }
+		&--current {
+			font-weight: bold;
+		}
+
+		&--separator {
+			opacity: 0.5;
+		}
+
+		&--total {
+			opacity: 0.5;
+		}
+	}
+
+	&__seeker {
+		width: calc(100% - 81px);
+		z-index: 10;
+		top: -6px;
+		right: 0;
+		position: absolute;
 	}
 
 }

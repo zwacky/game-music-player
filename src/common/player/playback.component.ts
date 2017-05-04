@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from "@ngrx/store";
 import { AppState } from "../../app/app.state";
-import { Observable } from "rxjs";
+import { Observable, Observer } from "rxjs";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
 import { ToastController } from "ionic-angular";
@@ -29,27 +29,41 @@ import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.pro
 					(change)="onRangeChanged($event)"
 					(input)="onRangeStarted()">
 
-				<ion-fab top right edge class="playback--fab" (click)="toggleFave()">
+				<ion-fab top left edge class="playback--fab" (click)="togglePlay()">
 					<button ion-fab>
-						<ion-icon [name]="(currentTrack$ | async)?.isFaved ? 'heart' : 'heart-outline'"></ion-icon>
+						<!-- <ion-icon [name]="(currentTrack$ | async)?.isFaved ? 'heart' : 'heart-outline'"></ion-icon> -->
+						<ion-icon [name]="(isPlaying$ | async) ? 'pause' : 'play'"></ion-icon>
 					</button>
 				</ion-fab>
 
 				<ion-toolbar>
+
+					<div class="playback__timing">
+						<span class="playback__timing--current">{{ (trackDurationPosition$ | async) | fromSeconds }}</span>
+						<span class="playback__timing--separator">/</span>
+						<span class="playback__timing--total">{{ trackDuration | fromSeconds }}</span>
+					</div>
+
 					<div class="playback__control">
 						<ion-buttons class="playback__control__buttons">
+							<!--
 							<button ion-button icon-only start (click)="togglePlay()">
 								<ion-icon [name]="(isPlaying$ | async) ? 'pause' : 'play'"></ion-icon>
 							</button>
+							-->
 							<button ion-button icon-only end (click)="nextTrack()">
 								<ion-icon name="skip-forward"></ion-icon>
+							</button>
+							<button ion-button icon-only start (click)="toggleFave()">
+								<!-- <ion-icon [name]="(currentTrack$ | async)?.isFaved ? 'heart' : 'heart-outline'"></ion-icon> -->
+								<ion-icon name="heart"></ion-icon>
 							</button>
 						</ion-buttons>
 					</div>
 
 					<div class="playback__display" (click)="scrollToTrack()" *ngIf="(currentTrack$ | async)">
-						<strong>{{ (currentTrack$ | async)?.creator }}</strong>
-						&nbsp;&nbsp;{{ (currentTrack$ | async)?.title }}
+						<div class="playback__display--creator">{{ (currentTrack$ | async)?.creator }}</div>
+						<div class="playback__display--title">{{ (currentTrack$ | async)?.title }}</div>
 					</div>
 				</ion-toolbar>
 			</div>
@@ -65,6 +79,7 @@ export class Playback {
 	isShuffle$: Observable<boolean>;
 	isRepeat$: Observable<boolean>;
 	audioState$: Observable<AudioState>;
+	trackDurationPosition$: Observable<number>;
 
 	seekerValue: number = 0;
 	seekerStyle: any = {};
@@ -79,6 +94,7 @@ export class Playback {
 		isRepeat: null,
 	};
 	private isRangeSliderMoving = false;
+	private seekerObserver: Observer<number>;
 
 
 	constructor(
@@ -96,11 +112,14 @@ export class Playback {
 		this.audioState$ = this.store.select(getAudioState);
 
 
-		setInterval(() => {
-			if (this.audioState === AudioState.LOADED && !this.isRangeSliderMoving) {
-				this.seekerValue = this.audio.seek() / this.trackDuration * 100;
-			}
-		}, 200);
+		Observable
+			.interval(200)
+			.subscribe(() => {
+				if (this.audioState === AudioState.LOADED && !this.isRangeSliderMoving) {
+					this.seekerValue = this.audio.seek() / this.trackDuration * 100;
+				}
+			});
+
 
 		// handle volume
 		this.volume$
@@ -131,6 +150,7 @@ export class Playback {
 							html5: true,
 							onload: () => this.onTrackLoaded(),
 							onend: () => this.onTrackEnded(),
+							onseek: () => this.onSeeked(),
 						});
 						this.currentTrack = track;
 					});
@@ -167,6 +187,27 @@ export class Playback {
 				if (audioState === AudioState.LOADING) {
 					this.seekerValue = 0;
 				}
+			});
+
+		/**
+		 * update the current track duration position upon:
+		 * - every 1 seconds
+		 * - when the player is playing/pausing
+		 */
+		this.trackDurationPosition$ = Observable.merge(
+			Observable
+				.create(observer => this.seekerObserver = observer),
+			Observable
+				.interval(500)
+				.map(() => (this.audioState === AudioState.LOADED) ? this.audio.seek() : 0),
+		);
+		// reset the track durations when the track has been changed
+		this.currentTrack$
+			.subscribe(track => {
+				if (this.seekerObserver) {
+					this.seekerObserver.next(0);
+				}
+				this.trackDuration = 0;
 			});
 	}
 
@@ -228,6 +269,13 @@ export class Playback {
 
 		// needs to unload otherwise onstop event will be triggered twice
 		this.audio.unload();
+	}
+
+	/**
+	 * whenever the user sought (ha! thought I didn't know the past tense of seek didcha!) on the player.
+	 */
+	private onSeeked() {
+		this.seekerObserver.next(this.audio.seek());
 	}
 
 	private setPlayerVolume(volume) {

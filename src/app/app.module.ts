@@ -13,6 +13,7 @@ import { reducer } from "./app.reducers";
 import { PlayerActions } from "../common/player/player.actions";
 import { HomeActions } from "../pages/home/home.actions";
 import { GoogleAnalyticsTracker } from "../common/tracking/google-analytics-tracker.provider";
+import { DurationFormatter } from "../common/pipes/duration-formatter";
 
 
 @NgModule({
@@ -23,6 +24,7 @@ import { GoogleAnalyticsTracker } from "../common/tracking/google-analytics-trac
 		GameMusicList,
 		GameMusicListItem,
 		NavbarMusicControl,
+		DurationFormatter,
 	],
 	imports: [
 		BrowserModule,
