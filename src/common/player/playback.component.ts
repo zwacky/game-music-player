@@ -136,26 +136,37 @@ export class Playback {
 		this.currentTrack$
 			.filter(track => track !== null)
 			.subscribe(track => {
-				firebase.storage()
-					.ref(`/tracks/${track.trackName}`)
-					.getDownloadURL()
-					.then((url) => {
-						if (this.audio) {
-							this.audio.stop();
-						}
-						this.audio = new Howl({
-							src: url,
-							autoplay: true,
-							volume: this.volumeLevel,
-							html5: true,
-							onload: () => this.onTrackLoaded(),
-							onend: () => this.onTrackEnded(),
-							onseek: () => this.onSeeked(),
+				// check if the same track is already loaded. if yes, restart it.
+				if (this.currentTrack === track) {
+					if (this.audioState === AudioState.LOADED) {
+						this.audio.seek(0);
+					}
+				} else {
+					firebase.storage()
+						.ref(`/tracks/${track.trackName}`)
+						.getDownloadURL()
+						.then((url) => {
+							if (this.audio) {
+								this.audio.stop();
+							}
+							this.audio = new Howl({
+								src: url,
+								autoplay: true,
+								volume: this.volumeLevel,
+								html5: true,
+								onload: () => this.onTrackLoaded(),
+								onend: () => this.onTrackEnded(),
+								onseek: () => this.onSeeked(),
+							});
+							this.currentTrack = track;
 						});
-						this.currentTrack = track;
-					});
+					this.store.dispatch(this.playerActions.setAudioState(AudioState.LOADING));
 
-				this.store.dispatch(this.playerActions.setAudioState(AudioState.LOADING));
+					if (this.seekerObserver) {
+						this.seekerObserver.next(0);
+					}
+					this.trackDuration = 0;
+				}
 			});
 
 		// handle pause tracking (only if a track has been loaded)
@@ -201,14 +212,6 @@ export class Playback {
 				.interval(500)
 				.map(() => (this.audioState === AudioState.LOADED) ? this.audio.seek() : 0),
 		);
-		// reset the track durations when the track has been changed
-		this.currentTrack$
-			.subscribe(track => {
-				if (this.seekerObserver) {
-					this.seekerObserver.next(0);
-				}
-				this.trackDuration = 0;
-			});
 	}
 
 	togglePlay() {

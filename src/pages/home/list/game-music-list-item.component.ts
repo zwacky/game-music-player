@@ -42,6 +42,15 @@ export class GameMusicListItem {
 	}
 
 	selectTrack(track: Track) {
+		// check if the track will be restarted
+		if (this.isSelected) {
+			this.store.dispatch(this.playerActions.selectTrack(null));
+
+			this.googleAnalyticsTracker.trackEvent('player', {
+				action: 'track_selected_restart',
+				label: track.trackName
+			});
+		}
 		this.store.dispatch(this.playerActions.selectTrack(track));
 
 		this.googleAnalyticsTracker.trackEvent('player', {
