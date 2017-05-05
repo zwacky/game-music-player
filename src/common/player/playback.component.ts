@@ -120,6 +120,14 @@ export class Playback {
 				}
 			});
 
+		// bind space to toggling play/pause
+		window.addEventListener('keypress', (evt) => {
+			if (evt.charCode === 32) {
+				evt.preventDefault();
+				this.togglePlay('space');
+			}
+		});
+
 
 		// handle volume
 		this.volume$
@@ -214,8 +222,13 @@ export class Playback {
 		);
 	}
 
-	togglePlay() {
+	togglePlay(triggeredBy = 'click') {
 		this.store.dispatch(this.playerActions.toggleSetting('isPlaying'));
+
+		this.googleAnalyticsTracker.trackEvent('player', {
+			action: 'toggle_play',
+			label: triggeredBy
+		});
 	}
 
 	toggleFave() {
