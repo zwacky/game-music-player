@@ -101,7 +101,7 @@ export class Playback {
 		private store: Store<AppState>,
 		private playerActions: PlayerActions,
 		private toastCtrl: ToastController,
-		private googleAnalyticsTracker: GoogleAnalyticsTracker
+		private googleAnalyticsTracker: GoogleAnalyticsTracker,
 	) {
 		this.volume$ = this.store.select(getVolume);
 		this.isMuted$ = this.store.select(isMuted);

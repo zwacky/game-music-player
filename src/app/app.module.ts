@@ -14,6 +14,7 @@ import { PlayerActions } from "../common/player/player.actions";
 import { HomeActions } from "../pages/home/home.actions";
 import { GoogleAnalyticsTracker } from "../common/tracking/google-analytics-tracker.provider";
 import { DurationFormatter } from "../common/pipes/duration-formatter";
+// import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 
 
 @NgModule({
@@ -31,7 +32,7 @@ import { DurationFormatter } from "../common/pipes/duration-formatter";
 		HttpModule,
 		IonicModule.forRoot(AppComponent, {}, {
 			links: [
-				// {component: HomePage, name: 'Home', segment: ':segment'}
+				{component: HomePage, name: 'Home', segment: ':trackName'}
 			],
 		}),
 		StoreModule.provideStore(reducer),
@@ -42,6 +43,7 @@ import { DurationFormatter } from "../common/pipes/duration-formatter";
 		HomePage,
 	],
 	providers: [
+		// {provide: LocationStrategy, useClass: PathLocationStrategy}, // when not using shebangs as location
 		{ provide: ErrorHandler, useClass: IonicErrorHandler },
 		PlayerActions,
 		HomeActions,

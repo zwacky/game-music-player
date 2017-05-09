@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
-
+import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app/app.state';
 import { GameMusicProvider } from "./game-music.provider";
@@ -17,7 +17,7 @@ import { getCurrentTrack } from "../../../common/player/player.selectors";
 	template: `
 		<ion-list>
 			<game-music-list-item
-				*ngFor="let track of bufferedTracks"
+				*ngFor="let track of bufferedTracks; trackBy: track?.trackName"
 				[track]="track"
 				[isSelected]="selectedTrack?.trackName === track.trackName">
 			</game-music-list-item>
@@ -38,6 +38,7 @@ export class GameMusicList {
 		private store: Store<AppState>,
 		private playerActions: PlayerActions,
 		private homeActions: HomeActions,
+		private location: Location,
 	) {
 		this.currentTrack$ = this.store.select(getCurrentTrack);
 
@@ -58,9 +59,13 @@ export class GameMusicList {
 					}
 				}, 0);
 
-				// select a track automatically to play
-				const randomTrack =  GameMusicProvider.getRandomTrack();
-				this.store.dispatch(this.playerActions.selectTrack(randomTrack));
+				// check if there is a track in the url already to play initially
+				const wantedTrackName = location.path()
+					.replace('/', ''); // remove the slashes
+				const track = (!wantedTrackName) ?
+					GameMusicProvider.getRandomTrack() :
+					GameMusicProvider.getTrackByName(wantedTrackName);
+				this.store.dispatch(this.playerActions.selectTrack(track));
 			});
 
 		// decide if the track is selected

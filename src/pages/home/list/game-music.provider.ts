@@ -33,7 +33,18 @@ export class GameMusicProvider {
 			.filter((item, index) => index === nextTrackIndex)
 			.concat([null])
 			[0];
+	}
 
+	/**
+	 * returns a track by its name.
+	 * if none could be found, a random track will be returned.
+	 */
+	static getTrackByName(trackName: string): Track {
+		const selectedTracks = this.data.tracks
+			.filter(track => track.trackName.indexOf(`${trackName}.m4a`) !== -1);
+		return (selectedTracks.length > 0) ?
+			selectedTracks[0] :
+			this.getNextTrack(null);
 	}
 
 }
