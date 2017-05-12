@@ -40,6 +40,7 @@ export class HomePage {
 	ngAfterViewInit() {
 		// setting content for scroller
 		TrackScroller.content = this.content;
+		TrackScroller.store = this.store;
 
 		this.tracksRendered$
 			.filter(Boolean)

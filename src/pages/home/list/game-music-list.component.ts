@@ -15,12 +15,14 @@ import { getCurrentTrack } from "../../../common/player/player.selectors";
 @Component({
 	selector: 'game-music-list',
 	template: `
-		<ion-list>
-			<game-music-list-item
-				*ngFor="let track of bufferedTracks; trackBy: track?.trackName"
-				[track]="track"
-				[isSelected]="selectedTrack?.trackName === track.trackName">
-			</game-music-list-item>
+		<ion-list [virtualScroll]="bufferedTracks">
+			<div *virtualItem="let track; let idx = index" style="width: 100%;" approxItemHeight="48px">
+				<game-music-list-item
+					[track]="track"
+					[isSelected]="selectedTrack?.trackName === track.trackName"
+					[idx]="idx">
+				</game-music-list-item>
+			</div>
 		</ion-list>
 	`
 })
@@ -30,7 +32,7 @@ export class GameMusicList {
 	public currentTrack$: Observable<Track>;
 
 	private tracksData = GameMusicProvider.data;
-	private bufferedTracks: Track[];
+	private bufferedTracks: Track[] = [];
 	private selectedTrack: Track;
 
 	constructor(
@@ -46,18 +48,6 @@ export class GameMusicList {
 			.subscribe(tracks => {
 				this.tracksData.tracks = tracks;
 				this.bufferedTracks = tracks;
-
-				// deferred rendering - saving 1+ sec
-				let i = 1;
-				const timer = setInterval(() => {
-					this.bufferedTracks = tracks.slice(0, i * 16);
-					i++;
-
-					if (i * 16 > tracks.length) {
-						clearInterval(timer);
-						this.store.dispatch(this.homeActions.setRendered(true));
-					}
-				}, 0);
 
 				// check if there is a track in the url already to play initially
 				const wantedTrackName = location.path()

@@ -4,6 +4,7 @@ import { AppState } from "../../../app/app.state";
 import { Track } from "../../../common/player/track.interface";
 import { PlayerActions } from "../../../common/player/player.actions";
 import { GoogleAnalyticsTracker } from "../../../common/tracking/google-analytics-tracker.provider";
+import { HomeActions } from "../home.actions";
 
 @Component({
 	selector: 'game-music-list-item',
@@ -32,13 +33,21 @@ export class GameMusicListItem {
 
 	@Input() track: Track;
 	@Input() isSelected: boolean;
+	@Input() idx: number;
 
 	constructor(
 		private store: Store<AppState>,
 		private playerActions: PlayerActions,
-		private googleAnalyticsTracker: GoogleAnalyticsTracker
+		private googleAnalyticsTracker: GoogleAnalyticsTracker,
+		private homeActions: HomeActions,
 	) {
 
+	}
+
+	ngOnInit() {
+		if (this.idx === 0) {
+			this.store.dispatch(this.homeActions.setRendered(true));
+		}
 	}
 
 	selectTrack(track: Track) {
