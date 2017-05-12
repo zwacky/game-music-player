@@ -117,8 +117,8 @@ export class Playback {
 			});
 
 		// bind space to toggling play/pause
-		window.addEventListener('keypress', (evt) => {
-			if (evt.charCode === 32) {
+		window.addEventListener('keydown', (evt) => {
+			if (evt.which === 32) {
 				evt.preventDefault();
 				this.togglePlay('space');
 			}
