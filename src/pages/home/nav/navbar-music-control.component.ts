@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { Observable } from "rxjs";
 import { AppState } from "../../../app/app.state";
 import { PlayerActions } from "../../../common/player/player.actions";
-import { isMuted, isShuffle, isRepeat } from "../../../common/player/player.selectors";
+import { isShuffle, isRepeat } from "../../../common/player/player.selectors";
 
 
 @Component({
@@ -20,15 +20,11 @@ import { isMuted, isShuffle, isRepeat } from "../../../common/player/player.sele
 			<button ion-button icon-only (click)="toggleSetting('isShuffle')" [ngClass]="{'navbar-music-control--active': (isShuffle$ | async)}">
 				<ion-icon name="shuffle"></ion-icon>
 			</button>
-			<button ion-button icon-only (click)="toggleSetting('isMuted')" [ngClass]="{'navbar-music-control--active': !(isMuted$ | async)}">
-				<ion-icon [name]="(musicControl$ | async)?.isMuted ? 'volume-off' : 'volume-up'"></ion-icon>
-			</button>
 		</ion-buttons>
 	`
 })
 export class NavbarMusicControl {
 
-	isMuted$: Observable<boolean>;
 	isShuffle$: Observable<boolean>;
 	isRepeat$: Observable<boolean>;
 
@@ -36,7 +32,6 @@ export class NavbarMusicControl {
 		private store: Store<AppState>,
 		private playerActions: PlayerActions
 	) {
-		this.isMuted$ = this.store.select(isMuted);
 		this.isShuffle$ = this.store.select(isShuffle);
 		this.isRepeat$ = this.store.select(isRepeat);
 	}
