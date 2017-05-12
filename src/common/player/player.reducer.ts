@@ -20,7 +20,7 @@ export interface PlayerState {
 }
 
 const defaultState: PlayerState = {
-	volume: 50,
+	volume: 30,
 	isShuffle: true,
 	isRepeat: false,
 	isPlaying: false,
