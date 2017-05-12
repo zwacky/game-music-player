@@ -20,7 +20,7 @@ export interface PlayerState {
 }
 
 const defaultState: PlayerState = {
-	volume: 0.5,
+	volume: 50,
 	isShuffle: true,
 	isRepeat: false,
 	isPlaying: false,
@@ -37,6 +37,9 @@ export function PlayerReducer(state: PlayerState = defaultState, action: Action)
 			const changedSetting = {};
 			changedSetting[action.payload] = !state[action.payload];
 			return Object.assign({}, state, changedSetting);
+
+		case PlayerActions.SET_VOLUME:
+			return Object.assign({}, state, {volume: action.payload});
 
 		case PlayerActions.SELECT_TRACK:
 			const changedState = Object.assign({}, state, {currentTrack: action.payload});

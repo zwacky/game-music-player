@@ -14,14 +14,16 @@ import { PlayerActions } from "../common/player/player.actions";
 import { HomeActions } from "../pages/home/home.actions";
 import { GoogleAnalyticsTracker } from "../common/tracking/google-analytics-tracker.provider";
 import { DurationFormatter } from "../common/pipes/duration-formatter";
+import { VolumeSlider } from "../common/player/volume-slider/volume-slider.component";
 // import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 
 
 @NgModule({
 	declarations: [
 		AppComponent,
-		Playback,
 		HomePage,
+		VolumeSlider,
+		Playback,
 		GameMusicList,
 		GameMusicListItem,
 		NavbarMusicControl,
@@ -41,6 +43,7 @@ import { DurationFormatter } from "../common/pipes/duration-formatter";
 	entryComponents: [
 		AppComponent,
 		HomePage,
+		VolumeSlider,
 	],
 	providers: [
 		// {provide: LocationStrategy, useClass: PathLocationStrategy}, // when not using shebangs as location

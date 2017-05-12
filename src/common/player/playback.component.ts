@@ -4,7 +4,7 @@ import { AppState } from "../../app/app.state";
 import { Observable, Observer } from "rxjs";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
-import { ToastController } from "ionic-angular";
+import { ToastController, PopoverController } from "ionic-angular";
 import * as firebase from 'firebase';
 import { Howl } from 'howler';
 import { TrackScroller } from "./track-scroller.provider";
@@ -13,6 +13,7 @@ import { Track } from "./track.interface";
 import { PlayerActions } from "./player.actions";
 import { getVolume, isMuted, getCurrentTrack, isPlaying, isShuffle, isRepeat, getAudioState } from "./player.selectors";
 import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.provider";
+import { VolumeSlider } from "./volume-slider/volume-slider.component";
 
 
 @Component({
@@ -46,17 +47,11 @@ import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.pro
 
 					<div class="playback__control">
 						<ion-buttons class="playback__control__buttons">
-							<!--
-							<button ion-button icon-only start (click)="togglePlay()">
-								<ion-icon [name]="(isPlaying$ | async) ? 'pause' : 'play'"></ion-icon>
-							</button>
-							-->
 							<button ion-button icon-only end (click)="nextTrack()">
 								<ion-icon name="skip-forward"></ion-icon>
 							</button>
-							<button ion-button icon-only start (click)="toggleFave()">
-								<!-- <ion-icon [name]="(currentTrack$ | async)?.isFaved ? 'heart' : 'heart-outline'"></ion-icon> -->
-								<ion-icon name="heart"></ion-icon>
+							<button ion-button icon-only start (click)="openVolumeSlider($event)">
+								<ion-icon [name]="(volume$ | async) == 0 ? 'volume-off' : 'volume-up'"></ion-icon>
 							</button>
 						</ion-buttons>
 					</div>
@@ -102,6 +97,7 @@ export class Playback {
 		private playerActions: PlayerActions,
 		private toastCtrl: ToastController,
 		private googleAnalyticsTracker: GoogleAnalyticsTracker,
+		private popoverCtrl: PopoverController,
 	) {
 		this.volume$ = this.store.select(getVolume);
 		this.isMuted$ = this.store.select(isMuted);
@@ -131,7 +127,7 @@ export class Playback {
 
 		// handle volume
 		this.volume$
-			.subscribe((volume) => {
+			.subscribe(volume => {
 				this.volumeLevel = volume;
 				this.setPlayerVolume(volume);
 			});
@@ -160,7 +156,7 @@ export class Playback {
 							this.audio = new Howl({
 								src: url,
 								autoplay: true,
-								volume: this.volumeLevel,
+								volume: this.volumeLevel / 100,
 								html5: true,
 								onload: () => this.onTrackLoaded(),
 								onend: () => this.onTrackEnded(),
@@ -250,6 +246,13 @@ export class Playback {
 		this.store.dispatch(this.playerActions.nextTrack(this.currentTrack, this.tempPlayerState.isShuffle, false));
 	}
 
+	openVolumeSlider(evt) {
+		let popover = this.popoverCtrl.create(VolumeSlider);
+		popover.present({
+			ev: evt
+		});
+	}
+
 	scrollToTrack() {
 		TrackScroller.scrollToSelectedTrack();
 	}
@@ -296,7 +299,7 @@ export class Playback {
 
 	private setPlayerVolume(volume) {
 		if (this.audio) {
-			this.audio.volume(volume);
+			this.audio.volume(volume / 100);
 		}
 	}
 
