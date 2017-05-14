@@ -12,7 +12,7 @@
 				All Music
 			</ion-segment-button>
 			<ion-segment-button value="faves">
-				Favourites (0)
+				Favourites ({{(faveIds$ | async)?.length}})
 			</ion-segment-button>
 		</ion-segment>
 	</ion-toolbar>
@@ -21,11 +21,14 @@
 <ion-content>
 
 	<game-music-list
+		[listSource]="sources.ALL"
 		[hidden]="segment !== ''">
 	</game-music-list>
 
-	<div [hidden]="segment !== 'faves'">
-
-	</div>
+	<!-- TODO add fave list -->
+	<!--<game-music-list
+		[listSource]="sources.FAVES"
+		[hidden]="segment !== 'faves'">
+	</game-music-list>-->
 
 </ion-content>

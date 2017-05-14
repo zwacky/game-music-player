@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Http } from '@angular/http';
 import { Observable } from 'rxjs';
 import { Location } from '@angular/common';
@@ -9,17 +9,19 @@ import * as firebase from 'firebase';
 import { Track } from "../../../common/player/track.interface";
 import { PlayerActions } from "../../../common/player/player.actions";
 import { HomeActions } from "../home.actions";
-import { getCurrentTrack } from "../../../common/player/player.selectors";
+import { getCurrentTrack, isTracklistDownloaded, getFaves } from "../../../common/player/player.selectors";
+import { ListSource } from "./list-source.enum";
+import { StorageManager } from "../../../common/storage/storage-manager.provider";
 
 
 @Component({
 	selector: 'game-music-list',
 	template: `
-		<ion-list [virtualScroll]="bufferedTracks">
-			<div *virtualItem="let track; let idx = index" style="width: 100%;" approxItemHeight="48px">
+		<ion-list [virtualScroll]="bufferedTracks" approxItemHeight="48px">
+			<div *virtualItem="let track; let idx = index" style="width: 100%;">
 				<game-music-list-item
 					[track]="track"
-					[isSelected]="selectedTrack?.trackName === track.trackName"
+					[isSelected]="(currentTrack$ | async)?.trackName === track.trackName"
 					[idx]="idx">
 				</game-music-list-item>
 			</div>
@@ -28,40 +30,62 @@ import { getCurrentTrack } from "../../../common/player/player.selectors";
 })
 export class GameMusicList {
 
-	// public musicControl$: Observable<MusicControl>;
-	public currentTrack$: Observable<Track>;
+	@Input() listSource: ListSource;
+
+	currentTrack$: Observable<Track>;
+	private listDownloaded$: Observable<boolean>;
+	private faveIds$: Observable<string[]>;
 
 	private tracksData = GameMusicProvider.data;
 	private bufferedTracks: Track[] = [];
 	private selectedTrack: Track;
 
 	constructor(
-		public http: Http,
+		private http: Http,
+		private location: Location,
 		private store: Store<AppState>,
 		private playerActions: PlayerActions,
 		private homeActions: HomeActions,
-		private location: Location,
+		private storeManager: StorageManager,
 	) {
 		this.currentTrack$ = this.store.select(getCurrentTrack);
-
-		this.loadTracks()
-			.subscribe(tracks => {
-				this.tracksData.tracks = tracks;
-				this.bufferedTracks = tracks;
-
-				// check if there is a track in the url already to play initially
-				const wantedTrackName = location.path()
-					.replace('/', ''); // remove the slashes
-				const track = (!wantedTrackName) ?
-					GameMusicProvider.getRandomTrack() :
-					GameMusicProvider.getTrackByName(wantedTrackName);
-				this.store.dispatch(this.playerActions.selectTrack(track));
-			});
+		this.listDownloaded$ = this.store.select(isTracklistDownloaded);
+		this.faveIds$ = this.store.select(getFaves);
 
 		// decide if the track is selected
-		this.currentTrack$
-			.filter(currentTrack => !!currentTrack)
-			.subscribe(currentTrack => this.selectedTrack = currentTrack);
+		// this.currentTrack$
+		// 	.filter(currentTrack => !!currentTrack)
+		// 	.subscribe(currentTrack => this.selectedTrack = currentTrack);
+	}
+
+	ngOnInit() {
+		if (this.listSource === ListSource.ALL) {
+			this.loadTracks()
+				.subscribe(tracks => {
+					this.tracksData.tracks = tracks;
+					this.bufferedTracks = tracks;
+
+					// check if there is a track in the url already to play initially
+					const wantedTrackName = this.location.path()
+						.replace('/', ''); // remove the slashes
+					const track = (!wantedTrackName) ?
+						GameMusicProvider.getRandomTrack() :
+						GameMusicProvider.getTrackByName(wantedTrackName);
+
+					this.store.dispatch(this.playerActions.selectTrack(track));
+					this.store.dispatch(this.playerActions.setListDownloaded());
+				});
+		} else if (this.listSource === ListSource.FAVES) {
+			this.listDownloaded$
+				.filter(Boolean)
+				.subscribe(faveIds => {
+					this.faveIds$
+						.subscribe(faveIds => {
+							this.bufferedTracks = GameMusicProvider.getTracksByIds(faveIds);
+							console.log('new faves list:', this.bufferedTracks);
+						});
+				});
+		}
 	}
 
 	private loadTracks() {

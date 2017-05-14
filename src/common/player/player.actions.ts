@@ -9,6 +9,8 @@ export class PlayerActions {
 	static SELECT_TRACK = 'SELECT_TRACK';
 	static SET_AUDIO_STATE = 'SET_AUDIO_STATE';
 	static SET_VOLUME = 'SET_VOLUME';
+	static SET_LIST_DOWNLOADED = 'SET_LIST_DOWNLOADED';
+	static TOGGLE_FAVE_TRACK = 'TOGGLE_FAVE_TRACK';
 
 	toggleSetting(settingKey: string): Action {
 		return {
@@ -47,6 +49,20 @@ export class PlayerActions {
 		return {
 			type: PlayerActions.SET_AUDIO_STATE,
 			payload: audioState
+		};
+	}
+
+	setListDownloaded() {
+		return {
+			type: PlayerActions.SET_LIST_DOWNLOADED,
+			payload: true
+		};
+	}
+
+	toggleFaveTrack(track: Track) {
+		return {
+			type: PlayerActions.TOGGLE_FAVE_TRACK,
+			payload: track
 		};
 	}
 

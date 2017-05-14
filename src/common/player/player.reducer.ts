@@ -17,6 +17,7 @@ export interface PlayerState {
 	currentTrack: Track;
 	trackListDownloaded: boolean;
 	audioState: AudioState;
+	faveIds: string[]
 }
 
 const defaultState: PlayerState = {
@@ -27,7 +28,8 @@ const defaultState: PlayerState = {
 	isMuted: false,
 	currentTrack: null,
 	trackListDownloaded: false,
-	audioState: AudioState.UNLOADED
+	audioState: AudioState.UNLOADED,
+	faveIds: []
 };
 
 export function PlayerReducer(state: PlayerState = defaultState, action: Action): any  {
@@ -51,6 +53,17 @@ export function PlayerReducer(state: PlayerState = defaultState, action: Action)
 		case PlayerActions.SET_AUDIO_STATE:
 			const changedAudioState = {audioState: action.payload};
 			return Object.assign({}, state, changedAudioState);
+
+		case PlayerActions.SET_LIST_DOWNLOADED:
+			return Object.assign({}, state, {trackListDownloaded: action.payload});
+
+		case PlayerActions.TOGGLE_FAVE_TRACK:
+			// check if track needs to be added or removed
+			const trackName = action.payload.trackName.substr(0, action.payload.trackName.length - 4);
+			const faveIds = (state.faveIds.indexOf(trackName) !== -1) ?
+				state.faveIds.filter(faveId => faveId !== trackName) :
+				state.faveIds.concat(trackName);
+			return Object.assign({}, state, {faveIds});
 
 		default:
 			return state;

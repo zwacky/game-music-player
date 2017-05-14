@@ -13,7 +13,6 @@ import { Track } from "./track.interface";
 import { PlayerActions } from "./player.actions";
 import { getVolume, isMuted, getCurrentTrack, isPlaying, isShuffle, isRepeat, getAudioState } from "./player.selectors";
 import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.provider";
-import { VolumeSlider } from "./volume-slider/volume-slider.component";
 
 
 @Component({
@@ -50,9 +49,14 @@ import { VolumeSlider } from "./volume-slider/volume-slider.component";
 							<button ion-button icon-only end (click)="nextTrack()">
 								<ion-icon name="skip-forward"></ion-icon>
 							</button>
+							<button ion-button icon-only end (click)="toggleFave()">
+								<ion-icon name="heart" color="dark"></ion-icon>
+							</button>
+							<!--
 							<button ion-button icon-only start (click)="openVolumeSlider($event)">
 								<ion-icon [name]="(volume$ | async) == 0 ? 'volume-off' : 'volume-up'"></ion-icon>
 							</button>
+							-->
 						</ion-buttons>
 					</div>
 
@@ -97,7 +101,6 @@ export class Playback {
 		private playerActions: PlayerActions,
 		private toastCtrl: ToastController,
 		private googleAnalyticsTracker: GoogleAnalyticsTracker,
-		private popoverCtrl: PopoverController,
 	) {
 		this.volume$ = this.store.select(getVolume);
 		this.isMuted$ = this.store.select(isMuted);
@@ -228,12 +231,7 @@ export class Playback {
 	}
 
 	toggleFave() {
-		const toast = this.toastCtrl.create({
-			message: 'Not implemented yet 😭',
-			duration: 2000,
-			position: 'bottom'
-		});
-		toast.present();
+		this.store.dispatch(this.playerActions.toggleFaveTrack(this.currentTrack));
 
 		this.trackFaveToggled(this.currentTrack.trackName);
 	}
@@ -244,13 +242,6 @@ export class Playback {
 		this.trackNextClicked();
 
 		this.store.dispatch(this.playerActions.nextTrack(this.currentTrack, this.tempPlayerState.isShuffle, false));
-	}
-
-	openVolumeSlider(evt) {
-		let popover = this.popoverCtrl.create(VolumeSlider);
-		popover.present({
-			ev: evt
-		});
 	}
 
 	scrollToTrack() {

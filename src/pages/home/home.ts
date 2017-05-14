@@ -6,7 +6,9 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../../app/app.state";
 import { TrackScroller } from "../../common/player/track-scroller.provider";
 import { getTracksRendered } from "./home.selectors";
-import { getCurrentTrack } from "../../common/player/player.selectors";
+import { getCurrentTrack, getFaves } from "../../common/player/player.selectors";
+import { ListSource } from "./list/list-source.enum";
+import { Track } from "../../common/player/track.interface";
 
 
 @Component({
@@ -19,7 +21,8 @@ export class HomePage {
 
 	public segment = '';
 	public tracksRendered$: Observable<boolean>;
-
+	public sources = ListSource;
+	public faveIds$: Observable<string[]>;
 
 	constructor(
 		private store: Store<AppState>,
@@ -27,6 +30,7 @@ export class HomePage {
 		private location: Location,
 	) {
 		this.tracksRendered$ = this.store.select(getTracksRendered);
+		this.faveIds$ = this.store.select(getFaves);
 
 		// update url everytime the track changes
 		this.store.select(getCurrentTrack)
