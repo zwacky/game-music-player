@@ -15,7 +15,6 @@ import { HomeActions } from "../pages/home/home.actions";
 import { GoogleAnalyticsTracker } from "../common/tracking/google-analytics-tracker.provider";
 import { DurationFormatter } from "../common/pipes/duration-formatter";
 import { VolumeSlider } from "../common/player/volume-slider/volume-slider.component";
-import { FaveList } from "../pages/home/fave/fave-list.component";
 import { StorageManager } from "../common/storage/storage-manager.provider";
 // import { LocationStrategy, PathLocationStrategy } from "@angular/common";
 
@@ -28,7 +27,6 @@ import { StorageManager } from "../common/storage/storage-manager.provider";
 		Playback,
 		GameMusicList,
 		GameMusicListItem,
-		FaveList,
 		NavbarMusicControl,
 		DurationFormatter,
 	],

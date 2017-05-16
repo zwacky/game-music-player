@@ -48,8 +48,10 @@ export class GameMusicProvider {
 	}
 
 	static getTracksByIds(trackIds: string[]): Track[] {
-		return this.data.tracks
-			.filter(track => trackIds.indexOf(track.trackName.substr(0, track.trackName.length-4)) !== -1);
+		return (!trackIds) ?
+			[] :
+			this.data.tracks
+				.filter(track => trackIds.indexOf(track.trackName.substr(0, track.trackName.length-4)) !== -1);
 	}
 
 }
