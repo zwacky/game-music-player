@@ -1,6 +1,7 @@
 import { Action } from "@ngrx/store";
 import { PlayerActions } from "./player.actions";
 import { Track } from "./track.interface";
+import { StorageManager, Field } from "../storage/storage-manager.provider";
 
 export enum AudioState {
 	UNLOADED,
@@ -29,7 +30,7 @@ const defaultState: PlayerState = {
 	currentTrack: null,
 	trackListDownloaded: false,
 	audioState: AudioState.UNLOADED,
-	faveIds: []
+	faveIds: StorageManager.getItem(Field.FAVE_IDS),
 };
 
 export function PlayerReducer(state: PlayerState = defaultState, action: Action): any  {

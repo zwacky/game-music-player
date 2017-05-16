@@ -38,7 +38,7 @@ export function fetchAudioState(state: PlayerState) {
 	return state.audioState;
 }
 
-export function fetchFaves(state: PlayerState) {
+export function fetchFaveIds(state: PlayerState) {
 	return state.faveIds;
 }
 
@@ -52,4 +52,4 @@ export const isMuted = createSelector(getPlayerState, fetchIsMuted);
 export const getCurrentTrack = createSelector(getPlayerState, fetchCurrentTrack);
 export const isTracklistDownloaded = createSelector(getPlayerState, fetchTracklistDownloaded);
 export const getAudioState = createSelector(getPlayerState, fetchAudioState);
-export const getFaves = createSelector(getPlayerState, fetchFaves);
+export const getFaveIds = createSelector(getPlayerState, fetchFaveIds);

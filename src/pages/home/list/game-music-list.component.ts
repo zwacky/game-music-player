@@ -9,7 +9,7 @@ import * as firebase from 'firebase';
 import { Track } from "../../../common/player/track.interface";
 import { PlayerActions } from "../../../common/player/player.actions";
 import { HomeActions } from "../home.actions";
-import { getCurrentTrack, isTracklistDownloaded, getFaves } from "../../../common/player/player.selectors";
+import { getCurrentTrack, isTracklistDownloaded, getFaveIds } from "../../../common/player/player.selectors";
 import { ListSource } from "./list-source.enum";
 import { StorageManager } from "../../../common/storage/storage-manager.provider";
 
@@ -17,6 +17,16 @@ import { StorageManager } from "../../../common/storage/storage-manager.provider
 @Component({
 	selector: 'game-music-list',
 	template: `
+		<ion-list>
+			<game-music-list-item
+				*ngFor="let track of bufferedTracks; let idx = index"
+				[track]="track"
+				[isSelected]="(currentTrack$ | async)?.trackName === track.trackName"
+				[idx]="idx">
+			</game-music-list-item>
+		</ion-list>
+
+		<!--
 		<ion-list [virtualScroll]="bufferedTracks" approxItemHeight="48px">
 			<div *virtualItem="let track; let idx = index" style="width: 100%;">
 				<game-music-list-item
@@ -26,6 +36,7 @@ import { StorageManager } from "../../../common/storage/storage-manager.provider
 				</game-music-list-item>
 			</div>
 		</ion-list>
+		-->
 	`
 })
 export class GameMusicList {
@@ -50,7 +61,7 @@ export class GameMusicList {
 	) {
 		this.currentTrack$ = this.store.select(getCurrentTrack);
 		this.listDownloaded$ = this.store.select(isTracklistDownloaded);
-		this.faveIds$ = this.store.select(getFaves);
+		this.faveIds$ = this.store.select(getFaveIds);
 
 		// decide if the track is selected
 		// this.currentTrack$
@@ -82,7 +93,6 @@ export class GameMusicList {
 					this.faveIds$
 						.subscribe(faveIds => {
 							this.bufferedTracks = GameMusicProvider.getTracksByIds(faveIds);
-							console.log('new faves list:', this.bufferedTracks);
 						});
 				});
 		}

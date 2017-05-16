@@ -6,7 +6,7 @@ import { Store } from "@ngrx/store";
 import { AppState } from "../../app/app.state";
 import { TrackScroller } from "../../common/player/track-scroller.provider";
 import { getTracksRendered } from "./home.selectors";
-import { getCurrentTrack, getFaves } from "../../common/player/player.selectors";
+import { getCurrentTrack, getFaveIds } from "../../common/player/player.selectors";
 import { ListSource } from "./list/list-source.enum";
 import { Track } from "../../common/player/track.interface";
 
@@ -30,7 +30,7 @@ export class HomePage {
 		private location: Location,
 	) {
 		this.tracksRendered$ = this.store.select(getTracksRendered);
-		this.faveIds$ = this.store.select(getFaves);
+		this.faveIds$ = this.store.select(getFaveIds);
 
 		// update url everytime the track changes
 		this.store.select(getCurrentTrack)
