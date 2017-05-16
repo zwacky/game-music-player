@@ -35,13 +35,4 @@ export class StorageManager {
 		}
 	}
 
-	private getFieldString(field: Field) {
-		switch (field) {
-			case Field.FAVE_IDS:
-				return 'faveIds';
-			default:
-				return null;
-		}
-	}
-
 }
