@@ -19,6 +19,10 @@ page-home {
 			color: white;
 			font-weight: 100;
 			font-size: 22px;
+
+			@media (max-width: 480px) {
+				text-align: left;
+			}
 		}
 	}
 
