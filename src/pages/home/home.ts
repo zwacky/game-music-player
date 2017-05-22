@@ -46,9 +46,9 @@ export class HomePage {
 		TrackScroller.content = this.content;
 		TrackScroller.store = this.store;
 
-		this.tracksRendered$
-			.filter(Boolean)
-			.subscribe(() => TrackScroller.scrollToSelectedTrack());
+		// this.tracksRendered$
+		// 	.filter(Boolean)
+		// 	.subscribe(() => TrackScroller.scrollToSelectedTrack());
 	}
 
 }
