@@ -26,17 +26,12 @@ import { StorageManager } from "../../../common/storage/storage-manager.provider
 			</game-music-list-item>
 		</ion-list>
 
-		<!--
-		<ion-list [virtualScroll]="bufferedTracks" approxItemHeight="48px">
-			<div *virtualItem="let track; let idx = index" style="width: 100%;">
-				<game-music-list-item
-					[track]="track"
-					[isSelected]="(currentTrack$ | async)?.trackName === track.trackName"
-					[idx]="idx">
-				</game-music-list-item>
-			</div>
-		</ion-list>
-		-->
+		<ion-infinite-scroll
+			(ionInfinite)="showMoreTracks($event)"
+			threshold="100%"
+			[enabled]="isInfiniteScrollEnabled()">
+			<ion-infinite-scroll-content></ion-infinite-scroll-content>
+		</ion-infinite-scroll>
 	`
 })
 export class GameMusicList {
@@ -44,9 +39,12 @@ export class GameMusicList {
 	@Input() listSource: ListSource;
 
 	currentTrack$: Observable<Track>;
+
+	private BUFFERED_ITEM_AMOUNT = 50;
+	private trackLimit = 1;
+	private faveTracks: Track[];
 	private listDownloaded$: Observable<boolean>;
 	private faveIds$: Observable<string[]>;
-
 	private tracksData = GameMusicProvider.data;
 	private bufferedTracks: Track[] = [];
 	private selectedTrack: Track;
@@ -74,7 +72,8 @@ export class GameMusicList {
 			this.loadTracks()
 				.subscribe(tracks => {
 					this.tracksData.tracks = tracks;
-					this.bufferedTracks = tracks;
+					this.bufferedTracks = this.tracksData.tracks
+						.slice(0, this.BUFFERED_ITEM_AMOUNT);
 
 					// check if there is a track in the url already to play initially
 					const wantedTrackName = this.location.path()
@@ -92,10 +91,26 @@ export class GameMusicList {
 				.subscribe(faveIds => {
 					this.faveIds$
 						.subscribe(faveIds => {
-							this.bufferedTracks = GameMusicProvider.getTracksByIds(faveIds);
+							this.faveTracks = GameMusicProvider.getTracksByIds(faveIds);
+							this.bufferedTracks = this.faveTracks
+								.slice(0, this.BUFFERED_ITEM_AMOUNT);
 						});
 				});
 		}
+	}
+
+	showMoreTracks(infiniteScroll) {
+		const targetTracks = (this.listSource === ListSource.ALL) ?
+			this.tracksData.tracks :
+			this.faveTracks;
+		this.bufferedTracks = targetTracks
+			.slice(0, this.BUFFERED_ITEM_AMOUNT * this.trackLimit);
+		this.trackLimit++;
+		infiniteScroll.complete();
+	}
+
+	isInfiniteScrollEnabled() {
+		return (this.trackLimit * this.BUFFERED_ITEM_AMOUNT) < this.tracksData.tracks.length;
 	}
 
 	private loadTracks() {
