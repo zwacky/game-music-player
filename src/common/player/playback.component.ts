@@ -4,7 +4,7 @@ import { AppState } from "../../app/app.state";
 import { Observable, Observer } from "rxjs";
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/filter';
-import { ToastController, PopoverController } from "ionic-angular";
+import { ToastController } from "ionic-angular";
 import * as firebase from 'firebase';
 import { Howl } from 'howler';
 import { TrackScroller } from "./track-scroller.provider";

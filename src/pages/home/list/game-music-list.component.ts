@@ -47,7 +47,6 @@ export class GameMusicList {
 	private faveIds$: Observable<string[]>;
 	private tracksData = GameMusicProvider.data;
 	private bufferedTracks: Track[] = [];
-	private selectedTrack: Track;
 
 	constructor(
 		private http: Http,
