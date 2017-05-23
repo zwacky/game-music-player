@@ -20,9 +20,11 @@ import { VolumeSlider } from "../../../common/player/volume-slider/volume-slider
 			<button ion-button icon-only (click)="toggleSetting('isRepeat')" [ngClass]="{'navbar-music-control--active': (isRepeat$ | async)}">
 				<ion-icon name="repeat"></ion-icon>
 			</button>
+			<!--
 			<button ion-button icon-only (click)="toggleSetting('isShuffle')" [ngClass]="{'navbar-music-control--active': (isShuffle$ | async)}">
 				<ion-icon name="shuffle"></ion-icon>
 			</button>
+			-->
 			<a (click)="track" href="https://github.com/zwacky/game-music-player" target="_blank" ion-button icon-only class="navbar-music-control--active" title="Go to GitHub project">
 				<ion-icon name="logo-github"></ion-icon>
 			</a>
