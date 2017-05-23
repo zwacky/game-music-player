@@ -47,6 +47,7 @@ export class GameMusicList {
 	private faveIds$: Observable<string[]>;
 	private tracksData = GameMusicProvider.data;
 	private bufferedTracks: Track[] = [];
+	private FIELD_TRACKS = 'tracks';
 
 	constructor(
 		private http: Http,
@@ -69,6 +70,7 @@ export class GameMusicList {
 	ngOnInit() {
 		if (this.listSource === ListSource.ALL) {
 			this.loadTracks()
+				.first()
 				.subscribe(tracks => {
 					this.tracksData.tracks = tracks;
 					this.bufferedTracks = this.tracksData.tracks
@@ -112,16 +114,28 @@ export class GameMusicList {
 		return (this.trackLimit * this.BUFFERED_ITEM_AMOUNT) < this.tracksData.tracks.length;
 	}
 
+	/**
+	 * check to load the tracks from localStorage first and update the cache later again.
+	 */
 	private loadTracks() {
 		return new Observable<Array<Track>>(observer => {
-			firebase.database().ref('/tracks')
-				.once('value')
-				.then(snapshot => {
-					const result = Object.keys(snapshot.val())
-						.map(key => snapshot.val()[key]);
-					observer.next(result);
-					observer.complete();
-				});
+			const tracks = localStorage.getItem(this.FIELD_TRACKS);
+			if (tracks) {
+				observer.next(JSON.parse(tracks));
+			} else {
+				firebase.database().ref('/tracks')
+					.once('value')
+					.then(snapshot => {
+						const val = snapshot.val();
+						const result = Object.keys(val)
+							.map(key => val[key]);
+						observer.next(result);
+						observer.complete();
+						// save the tracks in localStorage for caching
+						localStorage.setItem(this.FIELD_TRACKS, JSON.stringify(result));
+					});
+			}
+
 		});
 	}
 
