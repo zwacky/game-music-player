@@ -241,7 +241,7 @@ export class Playback {
 		this.trackCompleted(parseInt((percentageCompleted).toFixed(0)));
 		this.trackNextClicked();
 
-		this.store.dispatch(this.playerActions.nextTrack(this.currentTrack, this.tempPlayerState.isShuffle, false));
+		this.store.dispatch(this.playerActions.nextTrack(this.currentTrack, this.tempPlayerState.isShuffle));
 	}
 
 	scrollToTrack() {
@@ -274,11 +274,15 @@ export class Playback {
 	}
 
 	private onTrackEnded() {
-		this.store.dispatch(this.playerActions.nextTrack(this.currentTrack, this.tempPlayerState.isShuffle, this.tempPlayerState.isRepeat));
+		if (this.tempPlayerState.isRepeat) {
+			this.audio.play();
+		} else {
+			this.store.dispatch(this.playerActions.setAudioState(AudioState.UNLOADED));
+			this.store.dispatch(this.playerActions.nextTrack(this.currentTrack, this.tempPlayerState.isShuffle));
+			// needs to unload otherwise onstop event will be triggered twice
+			this.audio.unload();
+		}
 		this.trackCompleted(100);
-
-		// needs to unload otherwise onstop event will be triggered twice
-		this.audio.unload();
 	}
 
 	/**

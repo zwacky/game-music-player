@@ -33,15 +33,13 @@ export class PlayerActions {
 		};
 	}
 
-	nextTrack(currentTrack: Track, isShuffle: boolean, isRepeat: boolean): Action {
+	nextTrack(currentTrack: Track, isShuffle: boolean): Action {
 		const track = (isShuffle) ?
 			GameMusicProvider.getRandomTrack() :
 			GameMusicProvider.getNextTrack(currentTrack);
 		return {
 			type: PlayerActions.SELECT_TRACK,
-			payload: (isRepeat) ?
-				currentTrack :
-				track
+			payload: track
 		};
 	}
 
