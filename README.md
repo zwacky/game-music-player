@@ -3,6 +3,7 @@
     <img alt="Game Music Player" src="https://github.com/zwacky/game-music-player/blob/master/src/assets/logo/gamemusicplayer-logo-full.png?raw=true" width="546">
   </a>
 </p>
+<br>
 
 # Game Music Player
 
