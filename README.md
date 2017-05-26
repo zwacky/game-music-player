@@ -25,7 +25,7 @@ To get started simply:
 
 ## Credits
 
-I am a big fan of the great curated playlist over at http://vip.aersia.net by Cat777. The technology behind it is dated (Flash) and some features were missing - therefore this `game-music-player` came to be. Thanks again to Cat777 for giving out their playlist and support this project ✌️.
+I am a big fan of the great curated playlist over at http://vip.aersia.net by Cats777. The technology behind it is dated (Flash) and some features were missing - therefore this `game-music-player` came to be. Thanks again to Cats777 for giving out their playlist and support this project ✌️.
 
 
 ## Privacy
