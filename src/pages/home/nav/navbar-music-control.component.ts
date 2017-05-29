@@ -25,7 +25,7 @@ import { VolumeSlider } from "../../../common/player/volume-slider/volume-slider
 				<ion-icon name="shuffle"></ion-icon>
 			</button>
 			-->
-			<a (click)="track" href="https://github.com/zwacky/game-music-player" target="_blank" ion-button icon-only class="navbar-music-control--active" title="Go to GitHub project">
+			<a (click)="track" href="https://github.com/zwacky/game-music-player" target="_blank" rel="noopener" ion-button icon-only class="navbar-music-control--active" title="Go to GitHub project">
 				<ion-icon name="logo-github"></ion-icon>
 			</a>
 		</ion-buttons>
