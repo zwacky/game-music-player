@@ -8,23 +8,32 @@
 importScripts('./build/sw-toolbox.js');
 
 self.toolbox.options.cache = {
-  name: 'ionic-cache'
+	name: 'ionic-cache'
 };
 
+const CACHE_VERSION = 4;
+
 // pre-cache our key assets
-self.toolbox.precache(
-  [
-    './build/main.js',
-    './build/main.css',
-    './build/polyfills.js',
-    'index.html',
-    'manifest.json'
-  ]
-);
+// self.toolbox.precache(
+// 	[
+// 		'./build/main.js',
+// 		'./build/main.css',
+// 		'./build/polyfills.js',
+// 		'index.html',
+// 		'manifest.json'
+// 	]
+// );
 
 // dynamically cache any other local assets
-self.toolbox.router.any('/*', self.toolbox.cacheFirst);
+// self.toolbox.router.any('/*', self.toolbox.cacheFirst);
+self.toolbox.router.get('/(.*)', self.toolbox.cacheFirst, {
+	origin: /fonts\.googleapis\.com$/
+});
+self.toolbox.router.get('assets/*', self.toolbox.cacheFirst);
+self.toolbox.router.get('build/*', self.toolbox.cacheFirst);
+self.toolbox.router.get('/', self.toolbox.cacheFirst);
+self.toolbox.router.get('manifest.json', self.toolbox.cacheFirst);
 
 // for any other requests go to the network, cache,
 // and then only use that cached resource if your user goes offline
-self.toolbox.router.default = self.toolbox.networkFirst;
+// self.toolbox.router.default = self.toolbox.networkFirst;

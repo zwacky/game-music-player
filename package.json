@@ -5,10 +5,10 @@
   "private": true,
   "scripts": {
     "clean": "ionic-app-scripts clean",
-	"build": "ionic-app-scripts build",
-	"build:www": "ionic-app-scripts clean && ionic-app-scripts build --experimentalManualTreeshaking true --prod",
-	"ionic:build": "ionic-app-scripts build",
-	"ionic:serve": "ionic-app-scripts serve --sourceMapType eval",
+    "build": "ionic-app-scripts build",
+    "build:www": "ionic-app-scripts clean && ionic-app-scripts build --experimentalManualTreeshaking true --prod",
+    "ionic:build": "ionic-app-scripts build",
+    "ionic:serve": "ionic-app-scripts serve --sourceMapType eval",
     "ionic:serve-with-sourcemaps": "ionic-app-scripts serve"
   },
   "dependencies": {

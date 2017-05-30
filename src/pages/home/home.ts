@@ -1,6 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
 import { Location } from '@angular/common';
-import { Content, NavController } from "ionic-angular";
+import { Content, NavController, ToastController } from "ionic-angular";
 import { Observable } from 'rxjs';
 import { Store } from "@ngrx/store";
 import { AppState } from "../../app/app.state";
@@ -28,6 +28,7 @@ export class HomePage {
 		private store: Store<AppState>,
 		private navCtrl: NavController,
 		private location: Location,
+		private toastCtrl: ToastController,
 	) {
 		this.tracksRendered$ = this.store.select(getTracksRendered);
 		this.faveIds$ = this.store.select(getFaveIds);
@@ -38,6 +39,22 @@ export class HomePage {
 			.subscribe(track => {
 				const trackUrl = track.trackName.substr(0, track.trackName.length-4);
 				location.replaceState(trackUrl);
+			});
+	}
+
+	ngOnInit() {
+		// listen to the service worker promise in index.html to see if there has been a new update.
+		// condition: the service-worker.js needs to have some kind of change - e.g. increment CACHE_VERSION.
+		window['isUpdateAvailable']
+			.then(isAvailable => {
+				if (isAvailable) {
+					const toast = this.toastCtrl.create({
+						message: 'New Update available! Reload the webapp to see the latest juicy changes.',
+						position: 'bottom',
+						showCloseButton: true
+					});
+					toast.present();
+				}
 			});
 	}
 
