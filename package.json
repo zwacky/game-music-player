@@ -9,7 +9,9 @@
     "build:www": "ionic-app-scripts clean && ionic-app-scripts build --experimentalManualTreeshaking true --prod",
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve --sourceMapType eval",
-    "ionic:serve-with-sourcemaps": "ionic-app-scripts serve"
+	"ionic:serve-with-sourcemaps": "ionic-app-scripts serve",
+	"compile": "ionic cordova run browser --prod",
+	"deploy": "firebase deploy"
   },
   "dependencies": {
     "@angular/common": "4.1.2",
