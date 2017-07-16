@@ -1,18 +1,18 @@
+import { Observer } from 'rxjs/Observer';
+import { Observable } from 'rxjs/Observable';
 import { Component } from '@angular/core';
-import { Store } from "@ngrx/store";
-import { AppState } from "../../app/app.state";
-import { Observable, Observer } from "rxjs";
-import 'rxjs/add/operator/map';
-import 'rxjs/add/operator/filter';
-import { ToastController } from "ionic-angular";
+import { Store } from '@ngrx/store';
+import { AppState } from '../../app/app.state';
+import { ToastController } from 'ionic-angular';
 import * as firebase from 'firebase';
 import { Howl } from 'howler';
-import { TrackScroller } from "./track-scroller.provider";
-import { AudioState } from "./player.reducer";
-import { Track } from "./track.interface";
-import { PlayerActions } from "./player.actions";
-import { getVolume, isMuted, getCurrentTrack, isPlaying, isShuffle, isRepeat, getAudioState } from "./player.selectors";
-import { GoogleAnalyticsTracker } from "../tracking/google-analytics-tracker.provider";
+import { TrackScroller } from './track-scroller.provider';
+import { AudioState } from './player.reducer';
+import { Track } from './track.interface';
+import { PlayerActions } from './player.actions';
+import { getVolume, isMuted, getCurrentTrack, isPlaying, isShuffle, isRepeat, getAudioState } from './player.selectors';
+import { GoogleAnalyticsTracker } from '../tracking/google-analytics-tracker.provider';
+import '../rxjs.deps';
 
 
 @Component({
@@ -119,9 +119,9 @@ export class Playback {
 				}
 			});
 
-		// bind space to toggling play/pause
+		// bind space to toggling play/pause and omit if a input field is focused (search)
 		window.addEventListener('keydown', (evt) => {
-			if (evt.which === 32) {
+			if (evt.which === 32 && ['input'].indexOf(document.activeElement.tagName.toLowerCase()) === -1) {
 				evt.preventDefault();
 				this.togglePlay('space');
 			}

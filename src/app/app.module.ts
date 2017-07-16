@@ -16,7 +16,8 @@ import { GoogleAnalyticsTracker } from "../common/tracking/google-analytics-trac
 import { DurationFormatter } from "../common/pipes/duration-formatter";
 import { VolumeSlider } from "../common/player/volume-slider/volume-slider.component";
 import { StorageManager } from "../common/storage/storage-manager.provider";
-// import { LocationStrategy, PathLocationStrategy } from "@angular/common";
+import { NavbarSearch } from "../pages/home/nav/navbar-search.component";
+import { NavbarLogo } from "../pages/home/nav/navbar-logo.component";
 
 
 @NgModule({
@@ -28,6 +29,8 @@ import { StorageManager } from "../common/storage/storage-manager.provider";
 		GameMusicList,
 		GameMusicListItem,
 		NavbarMusicControl,
+		NavbarSearch,
+		NavbarLogo,
 		DurationFormatter,
 	],
 	imports: [

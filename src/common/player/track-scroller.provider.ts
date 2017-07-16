@@ -3,6 +3,7 @@ import { GameMusicProvider } from "../../pages/home/list/game-music.provider";
 import { Store } from "@ngrx/store";
 import { AppState } from "../../app/app.state";
 import { getCurrentTrack } from "./player.selectors";
+import '../rxjs.deps';
 
 export class TrackScroller {
 

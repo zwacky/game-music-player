@@ -11,6 +11,7 @@ export class PlayerActions {
 	static SET_VOLUME = 'SET_VOLUME';
 	static SET_LIST_DOWNLOADED = 'SET_LIST_DOWNLOADED';
 	static TOGGLE_FAVE_TRACK = 'TOGGLE_FAVE_TRACK';
+	static SET_SEARCH_FILTER = 'SET_SEARCH_FILTER';
 
 	toggleSetting(settingKey: string): Action {
 		return {
@@ -61,6 +62,13 @@ export class PlayerActions {
 		return {
 			type: PlayerActions.TOGGLE_FAVE_TRACK,
 			payload: track
+		};
+	}
+
+	setSearchFiter(filter: string) {
+		return {
+			type: PlayerActions.SET_SEARCH_FILTER,
+			payload: filter
 		};
 	}
 

@@ -18,7 +18,8 @@ export interface PlayerState {
 	currentTrack: Track;
 	trackListDownloaded: boolean;
 	audioState: AudioState;
-	faveIds: string[]
+	faveIds: string[],
+	trackFilter: string,
 }
 
 const defaultState: PlayerState = {
@@ -31,6 +32,7 @@ const defaultState: PlayerState = {
 	trackListDownloaded: false,
 	audioState: AudioState.UNLOADED,
 	faveIds: StorageManager.getItem(Field.FAVE_IDS, []),
+	trackFilter: '',
 };
 
 export function PlayerReducer(state: PlayerState = defaultState, action: Action): any  {
@@ -65,6 +67,10 @@ export function PlayerReducer(state: PlayerState = defaultState, action: Action)
 				state.faveIds.filter(faveId => faveId !== trackName) :
 				state.faveIds.concat(trackName);
 			return Object.assign({}, state, {faveIds});
+
+		case PlayerActions.SET_SEARCH_FILTER:
+			const trackFilter = action.payload;
+			return Object.assign({}, state, {trackFilter});
 
 		default:
 			return state;

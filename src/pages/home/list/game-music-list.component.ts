@@ -1,6 +1,7 @@
+import { getTrackFilter } from './../../../common/player/player.selectors';
 import { Component, Input } from '@angular/core';
 import { Http } from '@angular/http';
-import { Observable } from 'rxjs';
+import { Observable } from 'rxjs/Observable';
 import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app/app.state';
@@ -12,6 +13,7 @@ import { HomeActions } from "../home.actions";
 import { getCurrentTrack, isTracklistDownloaded, getFaveIds } from "../../../common/player/player.selectors";
 import { ListSource } from "./list-source.enum";
 import { StorageManager } from "../../../common/storage/storage-manager.provider";
+import '../../../common/rxjs.deps';
 
 
 @Component({
@@ -45,6 +47,8 @@ export class GameMusicList {
 	private faveTracks: Track[];
 	private listDownloaded$: Observable<boolean>;
 	private faveIds$: Observable<string[]>;
+	private trackFilter$: Observable<string>;
+	private trackFilter: string;
 	private tracksData = GameMusicProvider.data;
 	private bufferedTracks: Track[] = [];
 	private FIELD_TRACKS = 'tracks';
@@ -60,6 +64,7 @@ export class GameMusicList {
 		this.currentTrack$ = this.store.select(getCurrentTrack);
 		this.listDownloaded$ = this.store.select(isTracklistDownloaded);
 		this.faveIds$ = this.store.select(getFaveIds);
+		this.trackFilter$ = this.store.select(getTrackFilter);
 
 		// decide if the track is selected
 		// this.currentTrack$
@@ -86,6 +91,19 @@ export class GameMusicList {
 					this.store.dispatch(this.playerActions.selectTrack(track));
 					this.store.dispatch(this.playerActions.setListDownloaded());
 				});
+
+			// apply filtering to bufferedTracks
+			this.trackFilter$
+				// .debounceTime(1000)
+				.subscribe(trackFilter => {
+					// only filter if there has been tracksData already there
+					if (this.tracksData.tracks.length > 0) {
+						this.trackLimit = 1; // resetting the trackLimit
+						this.trackFilter = trackFilter;
+						this.addMoreTracks(this.tracksData.tracks);
+					}
+				});
+
 		} else if (this.listSource === ListSource.FAVES) {
 			this.listDownloaded$
 				.filter(Boolean)
@@ -104,14 +122,22 @@ export class GameMusicList {
 		const targetTracks = (this.listSource === ListSource.ALL) ?
 			this.tracksData.tracks :
 			this.faveTracks;
-		this.bufferedTracks = targetTracks
-			.slice(0, this.BUFFERED_ITEM_AMOUNT * this.trackLimit);
-		this.trackLimit++;
+		this.addMoreTracks(targetTracks);
 		infiniteScroll.complete();
 	}
 
 	isInfiniteScrollEnabled() {
 		return (this.trackLimit * this.BUFFERED_ITEM_AMOUNT) < this.tracksData.tracks.length;
+	}
+
+	private addMoreTracks(targetTracks) {
+		this.bufferedTracks = targetTracks
+			.filter(track => !this.trackFilter || (
+				track.creator.toLowerCase().indexOf(this.trackFilter.toLowerCase()) !== -1 ||
+				track.trackName.toLowerCase().indexOf(this.trackFilter.toLowerCase()) !== -1
+			))
+			.slice(0, this.BUFFERED_ITEM_AMOUNT * this.trackLimit);
+		this.trackLimit++;
 	}
 
 	/**

@@ -42,6 +42,10 @@ export function fetchFaveIds(state: PlayerState) {
 	return state.faveIds;
 }
 
+export function fetchTrackFilter(state: PlayerState) {
+	return state.trackFilter;
+}
+
 
 // *************************** PUBLIC API's ****************************
 export const getVolume = createSelector(getPlayerState, fetchVolume);
@@ -53,3 +57,4 @@ export const getCurrentTrack = createSelector(getPlayerState, fetchCurrentTrack)
 export const isTracklistDownloaded = createSelector(getPlayerState, fetchTracklistDownloaded);
 export const getAudioState = createSelector(getPlayerState, fetchAudioState);
 export const getFaveIds = createSelector(getPlayerState, fetchFaveIds);
+export const getTrackFilter = createSelector(getPlayerState, fetchTrackFilter);
