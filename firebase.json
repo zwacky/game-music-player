@@ -1,6 +1,6 @@
 {
 	"hosting": {
-		"public": "./platforms/browser/www/",
+		"public": "./www/",
 		"rewrites": [
 			{
 				"source": "**",
@@ -9,7 +9,7 @@
 		],
 		"headers": [
 			{
-				"source": "service-worker.js",
+				"source": "**/*.@(js|css)",
 				"headers": [
 					{
 						"key": "Cache-Control",
