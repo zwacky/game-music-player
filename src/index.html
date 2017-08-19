@@ -81,10 +81,13 @@
 	<ion-app></ion-app>
 
 	<!-- The polyfills js is generated during the build process -->
-	<script src="./build/polyfills.js"></script>
+	<script src="build/polyfills.js"></script>
+
+	<!-- all code from node_modules directory is here -->
+	<script src="build/vendor.js"></script>
 
 	<!-- The bundle js is generated during the build process -->
-	<script src="./build/main.js"></script>
+	<script src="build/main.js"></script>
 
 	<script>
 		(function (i, s, o, g, r, a, m) {
