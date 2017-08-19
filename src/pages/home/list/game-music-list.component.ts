@@ -6,7 +6,7 @@ import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app/app.state';
 import { GameMusicProvider } from "./game-music.provider";
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import { Track } from "../../../common/player/track.interface";
 import { PlayerActions } from "../../../common/player/player.actions";
 import { HomeActions } from "../home.actions";
@@ -149,7 +149,8 @@ export class GameMusicList {
 			if (tracks) {
 				observer.next(JSON.parse(tracks));
 			} else {
-				firebase.database().ref('/tracks')
+				firebase.database()
+					.ref('/tracks')
 					.once('value')
 					.then(snapshot => {
 						const val = snapshot.val();

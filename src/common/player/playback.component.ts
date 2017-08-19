@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../app/app.state';
 import { ToastController } from 'ionic-angular';
-import * as firebase from 'firebase';
+import * as firebase from 'firebase/app';
 import { Howl } from 'howler';
 import { TrackScroller } from './track-scroller.provider';
 import { AudioState } from './player.reducer';
