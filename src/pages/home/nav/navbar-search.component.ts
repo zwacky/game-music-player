@@ -1,7 +1,7 @@
 import { GoogleAnalyticsTracker } from './../../../common/tracking/google-analytics-tracker.provider';
 import { PlayerActions } from './../../../common/player/player.actions';
 import { Store } from '@ngrx/store';
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { AppState } from '../../../app/app.state';
 
 @Component({
@@ -9,6 +9,7 @@ import { AppState } from '../../../app/app.state';
 	template: `
 	<ion-item>
 		<ion-input
+			#navbarsearch
 			type="text"
 			placeholder="Search track or game…"
 			(keyup)="changedInput($event)"
@@ -19,12 +20,20 @@ import { AppState } from '../../../app/app.state';
 })
 export class NavbarSearch {
 
+	@ViewChild('navbarsearch') navbarSearch;
+
 	constructor(
 		private store: Store<AppState>,
 		private playerActions: PlayerActions,
 		private googleAnalyticsTracker: GoogleAnalyticsTracker,
 	) {
-
+		// bind cmd + f / ctrl + f to automatically focus on the search input
+		window.addEventListener('keydown', (evt) => {
+			if ((evt.ctrlKey || evt.metaKey) && evt.keyCode === 70) {
+				evt.preventDefault();
+				this.navbarSearch.setFocus();
+			}
+		});
 	}
 
 	/**
