@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../app/app.state';
 import { ToastController } from 'ionic-angular';
-import * as firebase from 'firebase/app';
 import { Howl } from 'howler';
 import { TrackScroller } from './track-scroller.provider';
 import { AudioState } from './player.reducer';
@@ -99,7 +98,6 @@ export class Playback {
 	constructor(
 		private store: Store<AppState>,
 		private playerActions: PlayerActions,
-		private toastCtrl: ToastController,
 		private googleAnalyticsTracker: GoogleAnalyticsTracker,
 	) {
 		this.volume$ = this.store.select(getVolume);
@@ -149,24 +147,22 @@ export class Playback {
 						this.audio.seek(0);
 					}
 				} else {
-					firebase.storage()
-						.ref(`/tracks/${track.trackName}`)
-						.getDownloadURL()
-						.then((url) => {
-							if (this.audio) {
-								this.audio.stop();
-							}
-							this.audio = new Howl({
-								src: url,
-								autoplay: true,
-								volume: this.volumeLevel / 100,
-								html5: true,
-								onload: () => this.onTrackLoaded(),
-								onend: () => this.onTrackEnded(),
-								onseek: () => this.onSeeked(),
-							});
-							this.currentTrack = track;
-						});
+					const base = 'https://tracks.gamemusicplayer.io';
+					const url = `${base}/${track.trackName}`;
+
+					if (this.audio) {
+						this.audio.stop();
+					}
+					this.audio = new Howl({
+						src: url,
+						autoplay: true,
+						volume: this.volumeLevel / 100,
+						html5: true,
+						onload: () => this.onTrackLoaded(),
+						onend: () => this.onTrackEnded(),
+						onseek: () => this.onSeeked(),
+					});
+					this.currentTrack = track;
 					this.store.dispatch(this.playerActions.setAudioState(AudioState.LOADING));
 
 					if (this.seekerObserver) {

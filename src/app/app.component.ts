@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Platform } from 'ionic-angular';
 import { HomePage } from '../pages/home/home';
 import * as firebase from 'firebase/app';
-import 'firebase/storage';
 import 'firebase/database';
 
 
