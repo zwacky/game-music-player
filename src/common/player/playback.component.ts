@@ -153,15 +153,20 @@ export class Playback {
 					if (this.audio) {
 						this.audio.stop();
 					}
-					this.audio = new Howl({
-						src: url,
-						autoplay: true,
-						volume: this.volumeLevel / 100,
-						html5: true,
-						onload: () => this.onTrackLoaded(),
-						onend: () => this.onTrackEnded(),
-						onseek: () => this.onSeeked(),
+
+					// have it wrapped around timeout for no ugly race conditions
+					setTimeout(() => {
+						this.audio = new Howl({
+							src: url,
+							autoplay: true,
+							volume: this.volumeLevel / 100,
+							html5: true,
+							onload: () => this.onTrackLoaded(),
+							onend: () => this.onTrackEnded(),
+							onseek: () => this.onSeeked(),
+						});
 					});
+
 					this.currentTrack = track;
 					this.store.dispatch(this.playerActions.setAudioState(AudioState.LOADING));
 
