@@ -24,3 +24,13 @@
 .toolbar-background {
 	background: transparent;
 }
+
+ion-label {
+	margin: 0;
+	display: block;
+	overflow: hidden;
+	flex: 1;
+	font-size: inherit;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
