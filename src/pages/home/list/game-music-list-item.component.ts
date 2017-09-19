@@ -24,6 +24,7 @@ import { HomeActions } from "../home.actions";
 				<div class="game-music-list-item__container__casual">
 					{{ track.title }}
 				</div>
+				<game-music-list-item-more></game-music-list-item-more>
 			</div>
 			<!-- <strong>{{ track.creator }}</strong> {{ track.title}} -->
 		</button>

@@ -9,6 +9,7 @@ import { StoreModule } from '@ngrx/store';
 import { NavbarMusicControl } from "../pages/home/nav/navbar-music-control.component";
 import { Playback } from "../common/player/playback.component";
 import { GameMusicListItem } from "../pages/home/list/game-music-list-item.component";
+import { GameMusicListItemMore } from "../pages/home/list/game-music-list-item-more.component";
 import { reducer } from "./app.reducers";
 import { PlayerActions } from "../common/player/player.actions";
 import { HomeActions } from "../pages/home/home.actions";
@@ -28,6 +29,7 @@ import { NavbarLogo } from "../pages/home/nav/navbar-logo.component";
 		Playback,
 		GameMusicList,
 		GameMusicListItem,
+		GameMusicListItemMore,
 		NavbarMusicControl,
 		NavbarSearch,
 		NavbarLogo,

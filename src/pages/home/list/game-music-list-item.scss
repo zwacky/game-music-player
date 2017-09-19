@@ -41,6 +41,16 @@ $border-color: #dedede;
 			position: relative;
 			top: 1px;
 		}
+
+		&__more {
+			transition: opacity 0.2s ease-out;
+			opacity: 0;
+			font-weight: bold;
+
+			.game-music-list-item:hover & {
+				opacity: 1;
+			}
+		}
 	}
 
 	.item-inner {
