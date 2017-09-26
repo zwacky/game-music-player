@@ -10,7 +10,7 @@ self.toolbox.options.cache = {
 	name: 'gamemusicplayer-cache'
 };
 
-const CACHE_VERSION = 19;
+const CACHE_VERSION = 20;
 
 // dynamically cache any other local assets
 self.toolbox.router.get('/(.*)', self.toolbox.cacheFirst, {
