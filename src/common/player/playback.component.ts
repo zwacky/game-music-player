@@ -87,6 +87,7 @@ export class Playback {
 	private audioState: AudioState;
 	private volumeLevel = 0;
 	private currentTrack: Track = null;
+	private pausedTrack: Track = null;
 	private tempPlayerState: {isShuffle: boolean, isRepeat: boolean} = {
 		isShuffle: null,
 		isRepeat: null,
@@ -177,15 +178,19 @@ export class Playback {
 				}
 			});
 
-		// handle pause tracking (only if a track has been loaded)
+		// handle pause tracking
+		// - only if a track has been loaded
+		// - only unpause if it's the same track when it's been paused
 		this.isPlaying$
 			.subscribe(isPlaying => {
 				if (!isPlaying) {
 					if (this.audio) {
 						this.audio.pause();
+						this.pausedTrack = this.currentTrack;
 					}
 				} else {
-					if (this.audio) {
+					// only start playing the track if it's been the same that has been halted
+					if (this.audio && this.pausedTrack === this.currentTrack) {
 						this.audio.play();
 					}
 				}
