@@ -1,25 +1,25 @@
 import { Component } from '@angular/core';
-import { Platform } from 'ionic-angular';
-import { HomePage } from '../pages/home/home';
-import * as firebase from 'firebase/app';
-import 'firebase/database';
-
-
-export const firebaseConfig = {
-	apiKey: 'AIzaSyD-qlduY4Mu89iXzch-OosGjf0dPb5zFLI',
-	authDomain: 'game-music-player.firebaseapp.com',
-	databaseURL: 'https://game-music-player.firebaseio.com',
-	storageBucket: 'game-music-player.appspot.com',
-	messagingSenderId: '26986259894'
-};
+import { Platform } from '@ionic/angular';
+import { SplashScreen } from '@ionic-native/splash-screen/ngx';
+import { StatusBar } from '@ionic-native/status-bar/ngx';
 
 @Component({
-	templateUrl: 'app.html'
+	selector: 'app-root',
+	templateUrl: 'app.component.html',
 })
 export class AppComponent {
-	rootPage: any = HomePage;
+	constructor(
+		private platform: Platform,
+		private splashScreen: SplashScreen,
+		private statusBar: StatusBar
+	) {
+		this.initializeApp();
+	}
 
-	constructor(platform: Platform) {
-		firebase.initializeApp(firebaseConfig);
+	initializeApp() {
+		this.platform.ready().then(() => {
+			this.statusBar.styleDefault();
+			this.splashScreen.hide();
+		});
 	}
 }

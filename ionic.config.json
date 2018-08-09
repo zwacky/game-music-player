@@ -1,5 +1,5 @@
 {
-  "name": "music-player",
-  "app_id": "",
-  "type": "ionic-angular"
+  "name": "ng-game-music-player",
+  "integrations": {},
+  "type": "angular"
 }
