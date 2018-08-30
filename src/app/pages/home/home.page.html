@@ -1,11 +1,17 @@
 <ion-header>
-	<ion-toolbar>
-		<ion-title>
-			Game Music Player
-		</ion-title>
+	<ion-toolbar color="primary">
+		<ion-buttons slot="start">
+			<navbar-logo></navbar-logo>
+		</ion-buttons>
+		<ion-searchbar debounce="0" (ionChange)="playerStore.setTrackFilter($event.detail.value)" placeholder="Search tracks" style="padding-left: 10px;"></ion-searchbar>
+		<ion-buttons slot="end">
+			<navbar-music-control></navbar-music-control>
+		</ion-buttons>
 	</ion-toolbar>
 </ion-header>
 
-<ion-content padding>
+<ion-content>
 	<track-list></track-list>
 </ion-content>
+
+<playback-control></playback-control>

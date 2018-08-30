@@ -1,0 +1,19 @@
+navbar-search {
+	display: inline-block;
+	width: calc(100% - 185px) !important;
+
+	.item-md {
+		background-color: transparent;
+		color: white;
+
+		.item-inner {
+			// border-bottom: 1px solid var(--ion-color-primary) !important;
+		}
+	}
+
+	input {
+		&::placeholder {
+			// color: fade-out(var(--ion-color-primary), 0%) !important;
+		}
+	}
+}

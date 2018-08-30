@@ -2,8 +2,8 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 import * as firebase from 'firebase';
 import 'firebase/database';
 import { Injectable } from '@angular/core';
-import { Track } from '../stores/player.store';
 import { Observable } from 'rxjs';
+import { Track } from '../common/track';
 
 export const firebaseConfig = {
 	apiKey: 'AIzaSyD-qlduY4Mu89iXzch-OosGjf0dPb5zFLI',

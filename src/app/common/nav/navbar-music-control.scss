@@ -1,0 +1,21 @@
+// navbar-music-control {
+// 	position: absolute;
+//     top: 15px;
+//     right: 5px;
+
+	.navbar-music-control {
+		ion-button {
+			opacity: 0.3;
+			transition: opacity 0.25s ease-in-out;
+			color: black;
+		}
+
+		&--active {
+			opacity: 1 !important;
+			// &ion-button {
+			// 	opacity: 1;
+			// }
+		}
+
+	}
+// }
