@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { PlayerStore } from '../../stores/player.store';
+import { PlayerStore } from '../../core/stores/player.store';
 
 @Component({
 	selector: 'app-page-home',
@@ -7,9 +7,5 @@ import { PlayerStore } from '../../stores/player.store';
 	styleUrls: ['home.page.scss'],
 })
 export class HomePage {
-	
-	constructor(
-		public playerStore: PlayerStore
-	) {}
-
+	constructor(public playerStore: PlayerStore) {}
 }

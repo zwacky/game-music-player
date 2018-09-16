@@ -1,5 +1,7 @@
 {
   "name": "ng-game-music-player",
-  "integrations": {},
+  "integrations": {
+    "cordova": {}
+  },
   "type": "angular"
 }
