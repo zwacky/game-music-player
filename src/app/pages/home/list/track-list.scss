@@ -1,0 +1,35 @@
+.track-list {
+	&__item {
+		cursor: pointer;
+		white-space: nowrap;
+		background-color: #fff;
+		transition: opacity 0.2s ease-in-out, background-color 0.2s ease-in-out;
+
+		&__creator, &__title {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+
+		.track-list__item__is-playing {
+			opacity: 0;
+		}
+		.track-list__item__is-faved {
+			opacity: 0;
+		}
+
+		&--active {
+			background-color: #f1f1f1;
+			
+			.track-list__item__is-playing {
+				opacity: 1;
+			}
+		}
+
+		&--faved {
+			.track-list__item__is-faved {
+				opacity: 1;
+			}
+		}
+	}
+}
