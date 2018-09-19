@@ -11,25 +11,10 @@
 			text-overflow: ellipsis;
 		}
 
-		.track-list__item__is-playing {
-			opacity: 0;
-		}
-		.track-list__item__is-faved {
-			opacity: 0;
-		}
-
 		&--active {
 			background-color: #f1f1f1;
-			
-			.track-list__item__is-playing {
-				opacity: 1;
-			}
 		}
 
-		&--faved {
-			.track-list__item__is-faved {
-				opacity: 1;
-			}
-		}
+		&--faved { }
 	}
 }

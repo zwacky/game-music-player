@@ -5,6 +5,7 @@ import { map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { Store } from '../store';
 import { TrackManager } from '../providers/track-manager.provider';
 import { Track } from '../interfaces/track';
+import { BufferedTrack } from '../../pages/home/list/buffered-track';
 
 export enum AudioState {
 	UNLOADED,
@@ -44,6 +45,16 @@ export class PlayerStore extends Store<PlayerState> {
 					track.creator.toLowerCase().indexOf(trackFilter.toLowerCase()) !== -1 ||
 					track.trackName.toLowerCase().indexOf(trackFilter.toLowerCase()) !== -1
 			)
+	);
+
+	filteredTracks2$: Observable<Track[]> = combineLatest(this.tracks$, this.trackFilter$).pipe(
+		map(([tracks, trackFilter]) =>
+			tracks.filter(
+				track =>
+					track.creator.toLowerCase().indexOf(trackFilter.toLowerCase()) !== -1 ||
+					track.trackName.toLowerCase().indexOf(trackFilter.toLowerCase()) !== -1
+			)
+		)
 	);
 
 	currentTrack$: Observable<Track> = this.state$.pipe(

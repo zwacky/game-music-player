@@ -1,7 +1,10 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
 import { Track } from '../../../core/interfaces/track';
 import { PlayerStore } from '../../../core/stores/player.store';
+import { BufferedTrack } from './buffered-track';
+import { UserDataStore } from '../../../core/stores/user-data.store';
+import { map } from 'rxjs/operators';
 
 @Component({
 	selector: 'track-list',
@@ -41,6 +44,12 @@ import { PlayerStore } from '../../../core/stores/player.store';
 		-->
 
 		<ion-list class="track-list">
+			<track-list-item 
+				*ngFor="let bufferedTrack of (bufferedTracks$ | async); trackBy: trackedBy"
+				[bufferedTrack]="bufferedTrack">
+				asdf
+			</track-list-item>
+			<!--
 			<ion-item
 				*ngFor="let track of (bufferedTracks$ | async); trackBy: trackedBy"
 				class="track-list__item"
@@ -63,6 +72,7 @@ import { PlayerStore } from '../../../core/stores/player.store';
 					<ion-icon name="star" class="track-list__item__is-faved"></ion-icon>
 				</div>
 			</ion-item>
+			-->
 		</ion-list>
 
 		<!--
@@ -92,37 +102,69 @@ import { PlayerStore } from '../../../core/stores/player.store';
 	`,
 })
 export class TrackList {
-	private limitTo = 0;
+	private limitTo = 50; // already start off with 50
 	private steps = 50;
-	private subscriptions = [];
-	
-	bufferedTracks$: BehaviorSubject<Track[]> = new BehaviorSubject([]);
+	private baseBufferedTracks$: Observable<BufferedTrack[]>;
+	private infiniteSteps$: BehaviorSubject<number> = new BehaviorSubject(this.steps);
 
-	constructor(
-		public playerStore: PlayerStore,
-	) {
-		const sub = playerStore.filteredTracks$.subscribe((tracks) => {
-			this.limitTo = 0;
-			this.increaseLimit(undefined, tracks);
-		});
-		this.subscriptions.push(sub);
+	// bufferedTracks$: BehaviorSubject<BufferedTrack[]> = new BehaviorSubject([]);
+	bufferedTracks$: Observable<BufferedTrack[]>;
+
+	constructor(public playerStore: PlayerStore) {
+		// bring tracks into the right format with isFaved, isPlaying, etc from BufferedTracks
+		this.baseBufferedTracks$ = playerStore.filteredTracks$.pipe(
+			map(filteredTracks =>
+				filteredTracks.map(filteredTrack => ({
+					...filteredTrack,
+					isFaved: false,
+					isCurrentTrack: false,
+					isPlaying: true,
+				}))
+			)
+		);
+
+		this.bufferedTracks$ = combineLatest(
+			this.baseBufferedTracks$,
+			playerStore.isPlaying$,
+			playerStore.currentTrack$,
+			this.infiniteSteps$
+		).pipe(
+			map(([baseBufferedTracks, isPlaying, currentTrack, steps]) => {
+				return baseBufferedTracks
+					.map(track => {
+						const checks = [
+							currentTrack.id === track.id,
+							currentTrack.id !== track.id && track.isCurrentTrack,
+						];
+						// return new reference in case one of the checks are true
+						if (checks.some(Boolean)) {
+							track = {
+								...track,
+								isCurrentTrack: currentTrack.id === track.id,
+								isPlaying: currentTrack.id === track.id && isPlaying,
+							};
+						}
+						return track;
+					})
+					.slice(0, steps);
+			})
+		);
 	}
 
 	increaseLimit(evt?, tracks = this.playerStore.state.tracks || []) {
 		this.limitTo += this.steps;
-		const filteredTracks = tracks.slice(0, this.limitTo);
-		this.bufferedTracks$.next(filteredTracks);
-		
+		// this.updateTracks();
+		console.log('TODO');
+
+		// push event
+		this.infiniteSteps$.next(this.limitTo);
+
 		if (evt) {
 			evt.target.complete();
 		}
 	}
 
-	trackedBy(index: number, item: Track) {
-		return index;
-	}
-
-	private ngOnDestroy() {
-		this.subscriptions.forEach(sub => sub());
+	trackedBy(index: number, item: BufferedTrack) {
+		return item.id;
 	}
 }

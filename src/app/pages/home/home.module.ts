@@ -7,6 +7,7 @@ import { HomePage } from './home.page';
 import { ComponentsModule } from '../../components/components.module';
 import { CoreModule } from '../../core/core.module';
 import { TrackList } from './list/track-list.component';
+import { TrackListItem } from './list/track-list-item.component';
 
 @NgModule({
 	imports: [
@@ -21,6 +22,6 @@ import { TrackList } from './list/track-list.component';
 			},
 		]),
 	],
-	declarations: [HomePage, TrackList],
+	declarations: [HomePage, TrackList, TrackListItem],
 })
 export class HomePageModule {}
