@@ -5,7 +5,7 @@ import { map, distinctUntilChanged, filter } from 'rxjs/operators';
 import { Store } from '../store';
 import { TrackManager } from '../providers/track-manager.provider';
 import { Track } from '../interfaces/track';
-import { BufferedTrack } from '../../pages/home/list/buffered-track';
+import { TrackListItem } from '../../pages/home/list/track-list-item.component';
 
 export enum AudioState {
 	UNLOADED,
@@ -14,7 +14,7 @@ export enum AudioState {
 }
 
 class PlayerState {
-	tracks: Track[] = [];
+	tracks: Track[] = null;
 	currentTrack: Track = null;
 	// currentTrackSeeker: number = 0;
 	elapsedSeconds: number = 0;
@@ -28,26 +28,14 @@ class PlayerState {
 export class PlayerStore extends Store<PlayerState> {
 	tracks$: Observable<Track[]> = this.state$.pipe(
 		map(s => s.tracks),
+		filter(s => s !== null),
 		distinctUntilChanged()
 	);
-
 	trackFilter$: Observable<string> = this.state$.pipe(
 		map(s => s.trackFilter),
 		distinctUntilChanged()
 	);
-
-	filteredTracks$: Observable<Track[]> = combineLatest(
-		this.tracks$,
-		this.trackFilter$,
-		(tracks, trackFilter) =>
-			tracks.filter(
-				track =>
-					track.creator.toLowerCase().indexOf(trackFilter.toLowerCase()) !== -1 ||
-					track.trackName.toLowerCase().indexOf(trackFilter.toLowerCase()) !== -1
-			)
-	);
-
-	filteredTracks2$: Observable<Track[]> = combineLatest(this.tracks$, this.trackFilter$).pipe(
+	filteredTracks$: Observable<Track[]> = combineLatest(this.tracks$, this.trackFilter$).pipe(
 		map(([tracks, trackFilter]) =>
 			tracks.filter(
 				track =>
@@ -56,19 +44,26 @@ export class PlayerStore extends Store<PlayerState> {
 			)
 		)
 	);
-
+	trackListItems$: Observable<TrackListItem[]> = this.filteredTracks$.pipe(
+		map(filteredTracks =>
+			filteredTracks.map(filteredTrack => ({
+				...filteredTrack,
+				isFaved: false,
+				isCurrentTrack: false,
+				isPlaying: true,
+			}))
+		)
+	);
 	currentTrack$: Observable<Track> = this.state$.pipe(
 		map(s => s.currentTrack),
 		filter(s => !!s),
 		distinctUntilChanged()
 	);
-
 	isPlaying$: Observable<boolean> = this.state$.pipe(
 		// only next it when audio has been loaded
 		map(s => s.isPlaying),
 		distinctUntilChanged()
 	);
-
 	currentTrackDuration$: Observable<number> = this.state$.pipe(
 		map(s => s.currentTrackDuration),
 		distinctUntilChanged()
@@ -92,7 +87,7 @@ export class PlayerStore extends Store<PlayerState> {
 	constructor(private firebaseManager: FirebaseManager, private trackManager: TrackManager) {
 		super(new PlayerState());
 
-		firebaseManager.tracks.subscribe(tracks => {
+		this.firebaseManager.tracks$.subscribe(tracks => {
 			this.setState({ ...this.state, tracks });
 		});
 	}

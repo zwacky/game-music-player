@@ -9,7 +9,6 @@ import { SettingsStore } from '../../core/stores/settings.store';
 
 @Injectable()
 export class PlaybackManager {
-	private currentTrack: Track = null;
 	private audio;
 	private base = 'https://tracks.gamemusicplayer.io';
 

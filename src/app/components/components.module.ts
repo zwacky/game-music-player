@@ -15,5 +15,6 @@ import { VolumeSlider } from '../pages/home/nav/volume-slider.component';
 	providers: [TrackManager, PlaybackManager],
 	declarations: [NavbarLogo, NavbarMusicControl, NavbarSearch, VolumeSlider, PlaybackControl],
 	exports: [NavbarLogo, NavbarMusicControl, NavbarSearch, VolumeSlider, PlaybackControl],
+	entryComponents: [NavbarMusicControl, VolumeSlider],
 })
 export class ComponentsModule {}

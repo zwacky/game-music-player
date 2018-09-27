@@ -1,6 +1,12 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy, OnChanges } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, OnChanges } from '@angular/core';
 import { PlayerStore } from '../../../core/stores/player.store';
-import { BufferedTrack } from './buffered-track';
+import { Track } from '../../../core/interfaces/track';
+
+export interface TrackListItem extends Track {
+	isFaved: boolean;
+	isPlaying: boolean;
+	isCurrentTrack: boolean;
+}
 
 @Component({
 	selector: 'track-list-item',
@@ -9,37 +15,37 @@ import { BufferedTrack } from './buffered-track';
 		<ion-item
 			class="track-list__item"
 			[ngClass]="{
-				'track-list__item--active': bufferedTrack.isCurrentTrack,
-				'track-list__item--faved': bufferedTrack.isFaved
+				'track-list__item--active': track.isCurrentTrack,
+				'track-list__item--faved': track.isFaved
 			}"
-			(click)="playerStore.selectTrack(bufferedTrack)">
+			(click)="playerStore.selectTrack(track)">
 
 			<div slot="start">
 				<ion-icon 
-					[name]="bufferedTrack.isPlaying ? 'play' : 'pause'" 
+					[name]="track.isPlaying ? 'musical-notes' : 'pause'" 
 					class="track-list__item__is-playing"
-					[style.opacity]="bufferedTrack.isCurrentTrack ? '1' : '0'">
+					[style.opacity]="track.isCurrentTrack ? '1' : '0'">
 				</ion-icon>
 			</div>
 			<div slot="start" class="track-list__item__creator">
-				<strong>{{ bufferedTrack.creator }}</strong>
+				<strong>{{ track.creator }}</strong>
 			</div>
 			<div slot="start" class="track-list__item__title">
-				{{ bufferedTrack.title }}
+				{{ track.title }}
 			</div>
 			<div slot="end">
 				<ion-icon 
 					name="star" 
 					class="track-list__item__is-faved"
-					[style.opacity]="bufferedTrack.isFaved ? '1' : '0'">
+					[style.opacity]="track.isFaved ? '1' : '0'">
 				</ion-icon>
 			</div>
 		</ion-item>
 	`,
 })
-export class TrackListItem implements OnChanges {
+export class TrackListItemComponent implements OnChanges {
 	@Input()
-	bufferedTrack: BufferedTrack;
+	track: TrackListItem;
 
 	constructor(public playerStore: PlayerStore) {}
 
