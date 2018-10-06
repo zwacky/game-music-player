@@ -8,11 +8,15 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@ionic/core": "4.0.0-beta.12",
+    "@modus/ionic-vue": "1.0.12",
+    "firebase": "5.5.2",
+    "howler": "2.0.15",
     "vue": "^2.5.17",
-    "vue-class-component": "^6.0.0",
-    "vue-property-decorator": "^7.0.0",
+    "vue-property-decorator": "7.1.1",
     "vue-router": "^3.0.1",
-    "vuex": "^3.0.1"
+    "vuex": "^3.0.1",
+    "vuex-class": "0.3.1"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.0.4",
@@ -24,6 +28,7 @@
     "node-sass": "^4.9.0",
     "sass-loader": "^7.0.1",
     "typescript": "^3.0.0",
-    "vue-template-compiler": "^2.5.17"
+    "vue-template-compiler": "^2.5.17",
+    "vuex-module-decorators": "0.7.1"
   }
 }
