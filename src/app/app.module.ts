@@ -40,7 +40,7 @@ import { NavbarLogo } from "../pages/home/nav/navbar-logo.component";
 		HttpModule,
 		IonicModule.forRoot(AppComponent, {}, {
 			links: [
-				{component: HomePage, name: 'Home', segment: ':trackName'}
+				{component: HomePage, name: 'Home', segment: ':file'}
 			],
 		}),
 		StoreModule.provideStore(reducer),

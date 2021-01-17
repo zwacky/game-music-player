@@ -60,7 +60,7 @@ import '../rxjs.deps';
 					</div>
 
 					<div class="playback__display" (click)="scrollToTrack()" *ngIf="(currentTrack$ | async)">
-						<div class="playback__display--creator">{{ (currentTrack$ | async)?.creator }}</div>
+						<div class="playback__display--creator">{{ (currentTrack$ | async)?.game }}</div>
 						<div class="playback__display--title">{{ (currentTrack$ | async)?.title }}</div>
 					</div>
 				</ion-toolbar>
@@ -148,8 +148,8 @@ export class Playback {
 						this.audio.seek(0);
 					}
 				} else {
-					const base = 'https://tracks.gamemusicplayer.io';
-					const url = `${base}/${track.trackName}`;
+					const base = '/tracks';
+					const url = `${base}/${track.file}.m4a?raw=true`;
 
 					if (this.audio) {
 						this.audio.stop();
@@ -239,7 +239,7 @@ export class Playback {
 	toggleFave() {
 		this.store.dispatch(this.playerActions.toggleFaveTrack(this.currentTrack));
 
-		this.trackFaveToggled(this.currentTrack.trackName);
+		this.trackFaveToggled(this.currentTrack.file);
 	}
 
 	nextTrack() {
@@ -275,7 +275,7 @@ export class Playback {
 
 		this.googleAnalyticsTracker.trackEvent('track', {
 			action: 'started',
-			label: this.currentTrack.trackName
+			label: this.currentTrack.file
 		});
 	}
 
@@ -318,10 +318,10 @@ export class Playback {
 		});
 	}
 
-	private trackFaveToggled(trackName) {
+	private trackFaveToggled(file) {
 		this.googleAnalyticsTracker.trackEvent('player', {
 			action: 'fave_toggled',
-			label: trackName
+			label: file
 		});
 	}
 

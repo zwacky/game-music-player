@@ -1,6 +1,7 @@
 export interface Track {
-	id: Number;
+	id: number;
+	game: string;
 	title: string;
-	creator: string;
-	trackName: string;
+	comp: string;
+	file: string;
 }

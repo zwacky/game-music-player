@@ -62,10 +62,10 @@ export function PlayerReducer(state: PlayerState = defaultState, action: Action)
 
 		case PlayerActions.TOGGLE_FAVE_TRACK:
 			// check if track needs to be added or removed
-			const trackName = action.payload.trackName.substr(0, action.payload.trackName.length - 4);
-			const faveIds = (state.faveIds.indexOf(trackName) !== -1) ?
-				state.faveIds.filter(faveId => faveId !== trackName) :
-				state.faveIds.concat(trackName);
+			const file = action.payload.file.substr(0, action.payload.file.length - 4);
+			const faveIds = (state.faveIds.indexOf(file) !== -1) ?
+				state.faveIds.filter(faveId => faveId !== file) :
+				state.faveIds.concat(file);
 			return Object.assign({}, state, {faveIds});
 
 		case PlayerActions.SET_SEARCH_FILTER:

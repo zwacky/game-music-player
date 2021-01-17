@@ -36,7 +36,7 @@ export class HomePage {
 		this.store.select(getCurrentTrack)
 			.filter(track => track !== null)
 			.subscribe(track => {
-				const trackUrl = track.trackName.substr(0, track.trackName.length-4);
+				const trackUrl = track.file.substr(0, track.file.length-4);
 				location.replaceState(trackUrl);
 			});
 	}

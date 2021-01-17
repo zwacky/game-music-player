@@ -1,6 +1,6 @@
 const http = require("https");
 const fs = require("fs");
-const input = require("./input.json");
+const input = require("./tracks/tracks.json");
 
 const BASE = "https://www.vipvgm.net/mu";
 

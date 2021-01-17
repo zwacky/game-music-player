@@ -19,14 +19,14 @@ import { HomeActions } from "../home.actions";
 					<ion-icon name="musical-notes"></ion-icon>
 				</div>
 				<div class="game-music-list-item__container__bold">
-					{{ track.creator }}
+					{{ track.game }}
 				</div>
 				<div class="game-music-list-item__container__casual">
 					{{ track.title }}
 				</div>
 				<game-music-list-item-more></game-music-list-item-more>
 			</div>
-			<!-- <strong>{{ track.creator }}</strong> {{ track.title}} -->
+			<!-- <strong>{{ track.game }}</strong> {{ track.title}} -->
 		</button>
 	`,
 })
@@ -58,14 +58,14 @@ export class GameMusicListItem {
 
 			this.googleAnalyticsTracker.trackEvent('player', {
 				action: 'track_selected_restart',
-				label: track.trackName
+				label: track.file
 			});
 		}
 		this.store.dispatch(this.playerActions.selectTrack(track));
 
 		this.googleAnalyticsTracker.trackEvent('player', {
 			action: 'track_selected',
-			label: track.trackName
+			label: track.file
 		});
 	}
 }

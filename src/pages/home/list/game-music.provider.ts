@@ -21,8 +21,8 @@ export class GameMusicProvider {
 	 */
 	static getNextTrack(track: Track | null): Track {
 		const currentTrackIndex = this.data.tracks
-			.map((item, index) => ({index, trackName: item.trackName}))
-			.filter(item => track && item.trackName === track.trackName)
+			.map((item, index) => ({index, file: item.file}))
+			.filter(item => track && item.file === track.file)
 			.concat([null])
 			.map(item => item ? item.index : null)
 			[0];
@@ -39,9 +39,9 @@ export class GameMusicProvider {
 	 * returns a track by its name.
 	 * if none could be found, a random track will be returned.
 	 */
-	static getTrackByName(trackName: string): Track {
+	static getTrackByName(file: string): Track {
 		const selectedTracks = this.data.tracks
-			.filter(track => track.trackName.indexOf(`${trackName}.m4a`) !== -1);
+			.filter(track => track.file.indexOf(`${file}.m4a`) !== -1);
 		return (selectedTracks.length > 0) ?
 			selectedTracks[0] :
 			this.getNextTrack(null);
@@ -51,7 +51,7 @@ export class GameMusicProvider {
 		return (!trackIds) ?
 			[] :
 			this.data.tracks
-				.filter(track => trackIds.indexOf(track.trackName.substr(0, track.trackName.length-4)) !== -1);
+				.filter(track => trackIds.indexOf(track.file.substr(0, track.file.length-4)) !== -1);
 	}
 
 }

@@ -6,7 +6,6 @@ import { Location } from '@angular/common';
 import { Store } from '@ngrx/store';
 import { AppState } from '../../../app/app.state';
 import { GameMusicProvider } from "./game-music.provider";
-import * as firebase from 'firebase/app';
 import { Track } from "../../../common/player/track.interface";
 import { PlayerActions } from "../../../common/player/player.actions";
 import { HomeActions } from "../home.actions";
@@ -23,7 +22,7 @@ import '../../../common/rxjs.deps';
 			<game-music-list-item
 				*ngFor="let track of bufferedTracks; let idx = index"
 				[track]="track"
-				[isSelected]="(currentTrack$ | async)?.trackName === track.trackName"
+				[isSelected]="(currentTrack$ | async)?.file === track.file"
 				[idx]="idx">
 			</game-music-list-item>
 		</ion-list>
@@ -87,11 +86,11 @@ export class GameMusicList {
 					// @todo
 
 					// check if there is a track in the url already to play initially
-					const wantedTrackName = this.location.path()
+					const wantedFile = this.location.path()
 						.replace('/', ''); // remove the slashes
-					const track = (!wantedTrackName) ?
+					const track = (!wantedFile) ?
 						GameMusicProvider.getRandomTrack() :
-						GameMusicProvider.getTrackByName(wantedTrackName);
+						GameMusicProvider.getTrackByName(wantedFile);
 
 					this.store.dispatch(this.playerActions.selectTrack(track));
 					this.store.dispatch(this.playerActions.setListDownloaded());
@@ -138,8 +137,8 @@ export class GameMusicList {
 	private addMoreTracks(targetTracks) {
 		this.bufferedTracks = targetTracks
 			.filter(track => !this.trackFilter || (
-				track.creator.toLowerCase().indexOf(this.trackFilter.toLowerCase()) !== -1 ||
-				track.trackName.toLowerCase().indexOf(this.trackFilter.toLowerCase()) !== -1
+				track.game.toLowerCase().indexOf(this.trackFilter.toLowerCase()) !== -1 ||
+				track.file.toLowerCase().indexOf(this.trackFilter.toLowerCase()) !== -1
 			))
 			.slice(0, this.BUFFERED_ITEM_AMOUNT * this.trackLimit);
 		this.trackLimit++;
@@ -150,52 +149,14 @@ export class GameMusicList {
 	 */
 	private loadTracks() {
 		return new Observable<Array<Track>>(observer => {
-			// check if track version is the same like in the localStorage
 			const tracks = localStorage.getItem(this.FIELD_TRACKS);
-			firebase.database()
-				.ref('versions/tracks')
-				.once('value')
-				.then(snapshot => {
-					const localVersion = parseInt("" + localStorage.getItem(this.FIELD_TRACK_VERSION), 10);
-					const defactoVersion = snapshot.val() || 0; // should never be 0… ¯\_(ツ)_/¯
-					if ((!localVersion && tracks) || localVersion < defactoVersion) {
-						// track entries are old.
-						// update localStorage and refetch `FIELD_TRACKS`.
-						this.fetchTracks()
-							.subscribe(tracks => {
-								observer.next(tracks);
-								observer.complete();
-							});
-					} else {
-						observer.complete();
-					}
-					localStorage.setItem(this.FIELD_TRACK_VERSION, defactoVersion);
-				});
-
 			if (tracks) {
 				observer.next(JSON.parse(tracks));
 			} else {
-				this.fetchTracks()
-					.subscribe(tracks => observer.next(tracks));
-			}
-
-		});
-	}
-
-	private fetchTracks() {
-		return new Observable<Array<Track>>(observer => {
-			firebase.database()
-				.ref('/tracks')
-				.once('value')
-				.then(snapshot => {
-					const val = snapshot.val();
-					const result = Object.keys(val)
-						.map(key => val[key]);
-					observer.next(result);
-					// save the tracks in localStorage for caching
-					localStorage.setItem(this.FIELD_TRACKS, JSON.stringify(result));
+				this.http.get('/tracks/tracks.json').subscribe(result => {
+					localStorage.setItem(this.FIELD_TRACKS, JSON.stringify(result.json().tracks));
 				});
+			}
 		});
 	}
-
 }
