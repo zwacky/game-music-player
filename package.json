@@ -11,7 +11,7 @@
     "ionic:serve": "ionic-app-scripts serve --sourceMapType eval",
     "ionic:serve-with-sourcemaps": "ionic-app-scripts serve",
     "compile": "ionic cordova run browser --prod",
-    "deploy": "firebase deploy"
+    "deploy": "ionic-app-scripts build --prod --generateSourceMap true && cp -a ./tracks ./www/"
   },
   "dependencies": {
     "@angular/common": "4.3.5",
@@ -29,9 +29,15 @@
     "@ionic/storage": "2.0.1",
     "@ngrx/core": "1.2.0",
     "@ngrx/store": "2.2.3",
+    "cordova-plugin-console": "1.0.5",
+    "cordova-plugin-device": "1.1.4",
+    "cordova-plugin-splashscreen": "~4.0.1",
+    "cordova-plugin-statusbar": "2.2.1",
+    "cordova-plugin-whitelist": "1.3.1",
     "firebase": "4.3.1",
     "howler": "2.0.4",
     "ionic-angular": "3.6.1",
+    "ionic-plugin-keyboard": "~2.2.1",
     "ionicons": "3.0.0",
     "ngrx-store-freeze": "0.1.9",
     "promise-polyfill": "6.0.2",
@@ -47,7 +53,7 @@
     "@ionic/cli-plugin-ionic-angular": "1.3.2",
     "ionic": "3.9.2",
     "source-map-explorer": "^1.4.0",
-    "typescript": "^3.9.7",
+    "typescript": "^2.6.2",
     "webpack": "^3.5.5"
   },
   "cordovaPlugins": [
@@ -68,5 +74,16 @@
       "locator": "browser"
     }
   ],
-  "description": "music-player: An Ionic project"
+  "description": "music-player: An Ionic project",
+  "cordova": {
+    "platforms": [],
+    "plugins": {
+      "cordova-plugin-console": {},
+      "cordova-plugin-device": {},
+      "cordova-plugin-splashscreen": {},
+      "cordova-plugin-statusbar": {},
+      "cordova-plugin-whitelist": {},
+      "ionic-plugin-keyboard": {}
+    }
+  }
 }

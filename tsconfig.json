@@ -10,6 +10,7 @@
     ],
     "module": "es2015",
     "moduleResolution": "node",
+    "types": [],
     "sourceMap": true,
     "target": "es5"
   },
