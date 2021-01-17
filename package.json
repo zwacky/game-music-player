@@ -10,8 +10,9 @@
     "ionic:build": "ionic-app-scripts build",
     "ionic:serve": "ionic-app-scripts serve --sourceMapType eval",
     "ionic:serve-with-sourcemaps": "ionic-app-scripts serve",
-    "compile": "ionic cordova run browser --prod",
-    "deploy": "ionic-app-scripts build --prod --generateSourceMap true && cp -a ./tracks ./www/"
+    "set-worktree": "git worktree prune && git worktree add -B gh-pages www origin/gh-pages",
+    "compile": "ionic-app-scripts build --prod --generateSourceMap true && cp -a ./tracks ./www/",
+    "deploy": "rm -rf www && npm run set-worktree && npm run compile && cd www && git add -A && git commit -m '🚀 publish to gh-pages' && git push && cd .."
   },
   "dependencies": {
     "@angular/common": "4.3.5",
