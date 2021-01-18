@@ -42,6 +42,7 @@ export class GameMusicList {
 	currentTrack$: Observable<Track>;
 
 	private BUFFERED_ITEM_AMOUNT = 50;
+	private BASE = 'https://raw.githubusercontent.com/zwacky/game-music-player/master/tracks';
 	private trackLimit = 1;
 	private faveTracks: Track[];
 	private listDownloaded$: Observable<boolean>;
@@ -50,8 +51,7 @@ export class GameMusicList {
 	private trackFilter: string;
 	private tracksData = GameMusicProvider.data;
 	private bufferedTracks: Track[] = [];
-	private FIELD_TRACKS = 'tracks';
-	private FIELD_TRACK_VERSION = 'trackVersion';
+	private FIELD_TRACKS = 'tracks_v2';
 
 	constructor(
 		private http: Http,
@@ -153,7 +153,7 @@ export class GameMusicList {
 			if (tracks) {
 				observer.next(JSON.parse(tracks));
 			} else {
-				this.http.get('/tracks/tracks.json').subscribe(result => {
+				this.http.get(`${this.BASE}/tracks.json`).subscribe(result => {
 					localStorage.setItem(this.FIELD_TRACKS, JSON.stringify(result.json().tracks));
 				});
 			}

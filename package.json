@@ -11,7 +11,8 @@
     "ionic:serve": "ionic-app-scripts serve --sourceMapType eval",
     "ionic:serve-with-sourcemaps": "ionic-app-scripts serve",
     "set-worktree": "git worktree prune && git worktree add -B gh-pages www origin/gh-pages",
-    "compile": "ionic-app-scripts build --prod --generateSourceMap true && cp -a ./tracks ./www/",
+    "compile2": "ionic-app-scripts build --prod --generateSourceMap true",
+    "compile": "ionic-app-scripts build --prod --generateSourceMap true",
     "deploy": "rm -rf www && npm run set-worktree && npm run compile && cd www && git add -A && git commit -m '🚀 publish to gh-pages' && git push && cd .."
   },
   "dependencies": {

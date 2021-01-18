@@ -148,7 +148,7 @@ export class Playback {
 						this.audio.seek(0);
 					}
 				} else {
-					const base = '/tracks';
+					const base = 'https://raw.githubusercontent.com/zwacky/game-music-player/master/tracks';
 					const url = `${base}/${track.file}.m4a?raw=true`;
 
 					if (this.audio) {
