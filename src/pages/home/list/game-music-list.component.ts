@@ -155,6 +155,7 @@ export class GameMusicList {
 			} else {
 				this.http.get(`${this.BASE}/tracks.json`).subscribe(result => {
 					localStorage.setItem(this.FIELD_TRACKS, JSON.stringify(result.json().tracks));
+					observer.next(result.json().tracks);
 				});
 			}
 		});
