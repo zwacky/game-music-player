@@ -19,7 +19,7 @@
     "@angular/common": "4.3.5",
     "@angular/compiler": "4.3.5",
     "@angular/compiler-cli": "4.3.5",
-    "@angular/core": "4.3.5",
+    "@angular/core": "11.0.5",
     "@angular/forms": "4.3.5",
     "@angular/http": "4.3.5",
     "@angular/platform-browser": "4.3.5",
